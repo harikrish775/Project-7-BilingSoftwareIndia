@@ -15,24 +15,29 @@
         color: black;
     }
     body{
-        background-color: rgb(130, 144, 199);
+        /* background-color: rgb(130, 144, 199); */
+        background-color: rgb(117, 118, 177);
         
     }
-    .form-control{
+    /* .form-control{
         border: 1px solid rgb(113, 0, 113);
         
+    } */
+    .form-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 17%, white 17%, white 100%);
     }
 </style>
 <!-- Add this in the head section of your HTML -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 
-<div class="container col-md-10 mr-1" style="background-color: rgb(130, 144, 199);min-height: 100vh;" >
+<div class="container col-md-10 mr-1" style="min-height: 100vh;" >
     <br><br><br><br><br>    
-    <form action="{% url 'party_save' %}" class="col-10 container" method="post" enctype="multipart/form-data" style="background-color: white; padding: 30px; border-radius: 15px;box-shadow: 4px 3px 4px gray;">
+    <form action="{% url 'party_save' %}" class="col-10 container form-div" method="post" enctype="multipart/form-data" style="background-color: white; padding: 30px; border-radius: 8px;box-shadow: 4px 3px 4px gray;">
         {% csrf_token %}
-    <div class="container col-md-10">
-        <h2>Add New Party</h2><br>
+        <br><br>
+    <div class="container col-md-10"> 
+        <h2 style="color: white;">Add New Party</h2><br>
         
         {% for m in messages %}
         <h5 style="background-color: rgba(255, 0, 0, 0.4);color: red;font-size: larger;padding: 10px;border-radius: 10px;text-align: center;">{{m}}</h5>

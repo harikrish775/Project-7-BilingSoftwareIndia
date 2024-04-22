@@ -45,6 +45,7 @@
     #detailsTable th{
         color: black;
         font-size: large;
+        /* background-color: rgb(130, 144, 199); */
     }
     #detailsTable td{
         color: black;
@@ -58,6 +59,7 @@
     }
     body{
         background-color: rgb(130, 144, 199);
+        /* background-color: white; */
         
     }
     .name-div{
@@ -81,7 +83,7 @@
 
 
 
-<div  class="container col-md-10 mr-1" style="background-color: rgb(130, 144, 199);min-height: 100vh;"><br><br><br><br><br><br>
+<div  class="container col-md-10 mr-1" style="min-height: 100vh;"><br><br><br><br><br><br>
     <div class="row">
         <!-- 1st column -->
     <div class="container col-md-3 ml-md-5 table-responsive mb-3 firstcolumn-div" style="padding: 20px;border-radius: 8px;box-shadow: 3px 3px 3px gray;min-height:74vh;">
@@ -89,8 +91,8 @@
                         
             <thead >
                 <th style="background-color: #3d4465;color: white;" class="col-4">PARTY</th>
-                <th style="background-color: #3d4465;color: white;" class="col-4">BALANCE </th>
-                <th style="background-color: #3d4465;color: white;" class="col-4">ACTION</th>
+                <th style="background-color: #3d4465;color: white;" class="col-4" colspan="2" >BALANCE </th>
+                <!-- <th style="background-color: #3d4465;color: white;" class="col-4">ACTION</th> -->
                 
             </thead>
             {% for i in parties %}
@@ -98,20 +100,24 @@
                 <td class="col-4">
                     <div class="row">
                         <div class="col-md-6">
-                            <!-- onclick="filterPartyRows('{{i.party_name}}','{{i.phone_number}}','{{i.total_amount}}')" -->
+                            
                             <a id="filterByName" title="Show" style="color: black;cursor: pointer;" href="{% url 'party_details' i.phone_number i.party_name %}" >{{i.party_name}}</a> 
                         </div>
-                        <!-- <div class="col-md-6">
-                            <a title="Edit Profile" style="display: inline-block;" id="editt" class="dropdown-item" href="{% url 'party_edit' pk=i.phone_number id=i.party_name %}" ><small>Edit <i class="fa-solid fa-pen-to-square"></i></small> </a>
-                        </div> -->
+                        
                     </div>
                 </td>
                 
                 {% if i.total_amount >= 0 %}
-                <td class="col-4" style="color: rgb(71, 216, 71)  ">{{i.total_amount}}</td>
+                <td class="col-4" style="color: rgb(71, 216, 71)  ">{{i.total_amount}} 
+                </td>
                 {% else %}
                 <td class="col-4" style="color: crimson ">{{i.total_amount}}</td>
                 {% endif %}
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" >                              
+                    <a title="Edit Profile" id="editt" class="dropdown-item" href="{% url 'party_edit' pk=i.phone_number id=i.party_name %}" >Edit  </a>
+                    <a class="dropdown-item" href="{% url 'parties_history' pk=i.phone_number id=i.party_name %}" title="{{ i.party_name }}'s History"> History</a>
+                    <a class="dropdown-item" href="{% url 'party_delete' pk=i.phone_number %}" >Delete </a>
+                  </div>
                 <td class="col-4">
                     <div class="row">
                         <!-- <div class="col"> 
@@ -121,7 +127,6 @@
                         <div class="dropdown show col" >
                             <a title="Delete {{ i.party_name }}"  class="dropdown partyy" href="#" role="button" id="dropdownMenuLink"  data-toggle="dropdown" style="color: gray;" onmouseover="this.style.color='red'" onmouseout="this.style.color='gray'"  aria-haspopup="true" aria-expanded="false">
                                 <i class="fa-solid fa-ellipsis-vertical ml-2"></i>
-                                <!-- <i style="color: red;" class="fa-solid fa-trash"></i> Delete -->
                             </a>
                           
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" >                              
@@ -143,9 +148,9 @@
         <div class="row" >
                 
             <!-- --------------------name--------------------- -->
-        
+            
             <div class="col name-div" style="padding: 20px;border-radius: 8px;box-shadow: 3px 3px 3px gray;" >
-                <div class="row"><div class="col"><h3 id="namee" style="text-transform: uppercase;font-size: 25px;color: white;" >{{details.party_name}}</h3></div> <div style="text-align: right;" class="col"><a style="background-color: white;color: #3d4465;" onmouseover="this.style.backgroundColor='#480ceb'" onmouseout="this.style.backgroundColor='#3d4465'" class="btn " href="{% url 'parties_table' %}"><i class="fa-solid fa-arrow-left"></i> Back</a></div> </div><br>
+                <div class="row"><div class="col"><h3 id="namee" style="text-transform: uppercase;font-size: 25px;color: white;" >{{details.party_name}}</h3></div> <div style="text-align: right;" class="col"><a style="background-color: white;color: #3d4465;"  class="btn " href="{% url 'parties_table' %}"><i class="fa-solid fa-arrow-left"></i> Back</a></div> </div><br> <!-- onmouseover="this.style.backgroundColor='#480ceb'" onmouseout="this.style.backgroundColor='#3d4465'" -->
             <div class="row mt-2" id="thirdTable">
                 <div class="col">
                     <label for="">Phone : </label> <span id="number"> {{details.phone_number}} </span><br>
@@ -190,7 +195,7 @@
                     <div class="table table-responsive row" id="pdftable" >
                         
                             <table class="table" id="detailsTable">
-                                <thead>
+                                <thead >
                                     <th>#</th>
                                     <th hidden>PARTY NAME </th>
                                     <th>TYPE </th>
