@@ -16,19 +16,38 @@
         background-color: rgb(130, 144, 199);
         
     }
+    @media(min-width:768px){
+        .table-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 121px, white 17px, white 100%);
+    }
+    }
+    @media(max-width:768px){
+        .table-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 155px, white 17px, white 100%);
+    }
+    }
+
+    .button-hover{
+        background-color: aliceblue;
+        color: #3d4465;
+    }
+    .button-hover:hover{
+        background-color:#4d5fbc ;
+        color: aliceblue;
+    }
     
 </style>
 
 <div class="container col-md-10 mr-1" style="background-color: rgb(130, 144, 199);min-height: 100vh;"> <br><br><br><br><br><br><br>
     
-   <div class="container col-md-10" style="box-shadow: 3px 3px 3px gray;border-radius: 15px;padding: 20px;background-color: white;">
-    <h2>{{partyName.party_name}}'s History <div style="float: right;"> <a style="background-color: #3d4465;color: white;" onmouseover="this.style.backgroundColor='#480ceb'" onmouseout="this.style.backgroundColor='#3d4465'" class="btn " href="{% url 'parties_table' %}"><i class="fa-solid fa-arrow-left"></i> Back</a> </div></h2>
+   <div class="container col-md-10 table-div" style="border-radius: 8px;padding: 20px;background-color: white;">
+    <h2 class=" mb-3"><span class="text-white">{{partyName.party_name}}'s History </span><div style="float: right;"> <a  class="btn button-hover" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</a> </div></h2>
     <table class="table" >
         <thead>
             <tr>
-                <th style="font-size: larger;">ACTION</th>
-                <th style="font-size: larger;">DATE</th>
-                <th style="font-size: larger;">STAFF</th>
+                <th style="font-size: larger;background-color: #3d4465;color: white;">ACTION</th>
+                <th style="font-size: larger;background-color: #3d4465;color: white;">DATE</th>
+                <th style="font-size: larger;background-color: #3d4465;color: white;">STAFF</th>
             </tr>
         </thead>
         <tbody>
@@ -45,5 +64,10 @@
 
 </div>
 
+<script>
+    function goBack() {
+    window.history.back();
+}
+</script>
 
 {% endblock %}

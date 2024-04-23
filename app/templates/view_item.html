@@ -124,9 +124,32 @@
     overflow: auto;
   }
 
+  @media(min-width:768px){
+        .table-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 158.5px, white 17px, white 100%);
+    }
+    }
+    @media(max-width:768px){
+        .table-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 158.5px, white 17px, white 100%);
+    }
+    }
+
+    .button-hover{
+        background-color: aliceblue;
+        color: #3d4465;
+    }
+    .button-hover:hover{
+        background-color:#4d5fbc ;
+        color: aliceblue;
+    }
+
 </style>
+
+
+
 {% if allitem %}
-<div class="content-body" style="background-color: white;">
+<div class="content-body" >
     <!-- row -->
     <div class="container-fluid">
 
@@ -137,25 +160,24 @@
         <div class="row">
             <!-- ------------party table ------------------->
 
-            <div class="col-12 table-responsive" style="background-color: rgb(130, 144, 199);padding: 30px;border-radius: 15px;box-shadow: 3px 3px 3px gray;">
+            <div class="col-12 table-responsive table-div" style="padding: 30px;border-radius: 8px;">
                 
-                <div class="row">
+                <div class="row" style="display: flex;">
                     
-                        <h3>ITEM </h3> <div class="dropdown ml-2">
-                           
-                          </div> 
+                        <h3 class="text-white col-8 mt-3">ITEMS </h3> 
+
                     
                     
                         <!-- ==-=================-search bar-=============================== -->
-
-                    <div class="search-bar ml-auto w-40" ><br>
-                        <div class="input-group" >
-                          
-                          <input type="text" autocomplete="off" id="myInput1" onkeyup="filter(this);" onclick="myFunction1()" class="form-control" placeholder="search"  />
-                          
-                          <a href="{% url 'add_item' %}" style="background-color: #3d4465;color: white;" onmouseover="this.style.backgroundColor='#480ceb'" onmouseout="this.style.backgroundColor='#3d4465'" class="btn col-2 ml-2" ><i class="fa fa-plus"></i></a>
-                        </div>
-                      </div>
+                        <div class="search-bar ml-auto col" ><br>
+                            <div class="input-group" >
+                              
+                              <input type="text" autocomplete="off" id="myInput1" onkeyup="filter(this);" onclick="myFunction1()" class="form-control" placeholder="search"  />
+                              
+                              <a href="{% url 'add_item' %}" class="btn col-2 ml-2 button-hover" ><i class="fa fa-plus"></i></a>
+                            </div>
+                          </div>
+                    
 
                     <!-- ====================================================== -->
                    
@@ -174,9 +196,9 @@
                     <table class="table " id="itemTable" >
                         
                         <thead>
-                            <th class="col-4">ITEM</th>
-                            <th class="col-4">QUANTITY </th>
-                            <th class="col-4">ACTION</th>
+                            <th class="col-4" style="background-color: #3d4465;color: white;">ITEM</th>
+                            <th class="col-4" style="background-color: #3d4465;color: white;">QUANTITY </th>
+                            <th class="col-4" style="background-color: #3d4465;color: white;">ACTION</th>
                             
                         </thead>
                         {% for i in allitem %}
@@ -187,7 +209,7 @@
                                         <a id="filterByName" title="Show" style="color: black;cursor: pointer;" href="{% url 'view_items' i.pk %}" >{{ i.item_name|capfirst }}</a> 
                                     </div>
                                     <div class="col-md-8">
-                                        <a title="Edit Profile" style="display: inline-block; margin-left: 20px;" id="editt" class="fa fa-edit" href="{% url 'edit_item' i.pk %}" ><small>Edit <i class="fa-solid fa-pen-to-square"></i></small> </a>
+                                        <a title="Edit Profile" style="display: inline-block; margin-left: 20px;" id="editt" class="fa fa-edit" href="{% url 'edit_item' i.pk %}" ><small>Edit </small> </a>
                                     </div>
                                 </div>
                             </td>

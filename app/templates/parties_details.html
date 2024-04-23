@@ -63,40 +63,102 @@
         
     }
     .name-div{
-        background: linear-gradient(#3d4465 0%, #3d4465 33%, white 20%, white 100%);
+        background: linear-gradient(#3d4465 0%, #3d4465 80px, white 20%, white 100%);
     }
-    .transaction-div{
-        background: linear-gradient(#3d4465 0%, #3d4465 40%, white 20%, white 100%);
-    }
+    
     @media(min-width:768px){
         .firstcolumn-div{
-        background: linear-gradient(#3d4465 0%, #3d4465 11.2%, white 0%, white 100%);
+        background: linear-gradient(#3d4465 0, #3d4465 166px, white 0px, white 100px);
+        min-height:90vh;
+    }
+    .transaction-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 135px, white 20%, white 100%);
+        min-height: 59vh;
+    }
+    .whhole{
+        margin-bottom: 50px;
     }
     }
+
     @media(max-width:768px){
         .firstcolumn-div{
-        background: linear-gradient(#3d4465 0%, #3d4465 13%, white 0%, white 100%);
+        background: linear-gradient(#3d4465 0, #3d4465 166px, white 0, white 100px);
+        min-height:10vh;
+        
     }
+    .transaction-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 180px, white 20%, white 100%);
+        min-height: 10vh;
+    }
+    .whhole{
+        margin-bottom: 250px;
+    }
+    }
+    .button-hover{
+        background-color: aliceblue;
+        color: #3d4465;
+    }
+    .button-hover:hover{
+        background-color:#4d5fbc ;
+        color: aliceblue;
     }
 </style>
 
 
 
 
-<div  class="container col-md-10 mr-1" style="min-height: 100vh;"><br><br><br><br><br><br>
+<div  class="container col-md-10 mr-1 whhole" style="min-height: 100vh;"><br><br><br><br><br><br>
     <div class="row">
         <!-- 1st column -->
-    <div class="container col-md-3 ml-md-5 table-responsive mb-3 firstcolumn-div" style="padding: 20px;border-radius: 8px;box-shadow: 3px 3px 3px gray;min-height:74vh;">
+    <div class="container col-md-3 ml-md-5 table-responsive mb-3 firstcolumn-div" style="padding: 20px;border-radius: 8px;">
+
+        <div class="search-bar ml-auto mb-5" ><br>
+            <div class="input-group" >
+              
+              <input type="text" autocomplete="off" id="myInput1" onkeyup="filter(this);" onclick="myFunction1()" class="form-control" placeholder="search"  />
+              
+              <a href="{% url 'parties_add_page' %}"  class="btn col-2 ml-2 button-hover" ><i class="fa-solid fa-plus"></i></a>
+
+              
+            </div>
+          </div>
+          <script>
+            function filter(input) {
+                var filterValue = input.value.toLowerCase();
+                var tableRows = document.querySelectorAll('#partyTable tbody tr');
+
+                tableRows.forEach(function(row) {
+                    var cells = row.querySelectorAll('td');
+                    var isVisible = false;
+
+                    cells.forEach(function(cell) {
+                        var cellValue = cell.textContent || cell.innerText;
+                        if (cellValue.toLowerCase().indexOf(filterValue) > -1) {
+                            isVisible = true;
+                        }
+                    });
+
+                    if (isVisible) {
+                        row.style.display = "table-row";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+            }
+
+
+          </script>
+
         <table class="table " id="partyTable" >
                         
             <thead >
-                <th style="background-color: #3d4465;color: white;" class="col-4">PARTY</th>
+                <th style="background-color: #3d4465;color: white;" class="col-8">PARTY</th>
                 <th style="background-color: #3d4465;color: white;" class="col-4" colspan="2" >BALANCE </th>
-                <!-- <th style="background-color: #3d4465;color: white;" class="col-4">ACTION</th> -->
+                
                 
             </thead>
             {% for i in parties %}
-            <tr>
+            <tr style="font-size: 16px;">
                 <td class="col-4">
                     <div class="row">
                         <div class="col-md-6">
@@ -114,8 +176,8 @@
                 <td class="col-4" style="color: crimson ">{{i.total_amount}}</td>
                 {% endif %}
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" >                              
-                    <a title="Edit Profile" id="editt" class="dropdown-item" href="{% url 'party_edit' pk=i.phone_number id=i.party_name %}" >Edit  </a>
-                    <a class="dropdown-item" href="{% url 'parties_history' pk=i.phone_number id=i.party_name %}" title="{{ i.party_name }}'s History"> History</a>
+                    <a title="Edit Profile" id="editt" class="dropdown-item" href="{% url 'party_edit' pk=i.phone_number id=i.party_name %}" >Edit </a>
+                    <a class="dropdown-item" href="{% url 'parties_history' pk=i.phone_number id=i.party_name %}" title="{{ i.party_name }}'s History"> History </a>
                     <a class="dropdown-item" href="{% url 'party_delete' pk=i.phone_number %}" >Delete </a>
                   </div>
                 <td class="col-4">
@@ -149,8 +211,16 @@
                 
             <!-- --------------------name--------------------- -->
             
-            <div class="col name-div" style="padding: 20px;border-radius: 8px;box-shadow: 3px 3px 3px gray;" >
-                <div class="row"><div class="col"><h3 id="namee" style="text-transform: uppercase;font-size: 25px;color: white;" >{{details.party_name}}</h3></div> <div style="text-align: right;" class="col"><a style="background-color: white;color: #3d4465;"  class="btn " href="{% url 'parties_table' %}"><i class="fa-solid fa-arrow-left"></i> Back</a></div> </div><br> <!-- onmouseover="this.style.backgroundColor='#480ceb'" onmouseout="this.style.backgroundColor='#3d4465'" -->
+            <div class="col name-div" style="padding: 20px;border-radius: 8px;" >
+                <div class="row mt-2">
+                    <div class="col"><h3 id="namee" style="text-transform: uppercase;font-size: 25px;color: white;" >{{details.party_name}}</h3></div> 
+                    <!-- <div style="text-align: right;" class="col"><a class="btn button-hover" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</a></div>  -->
+                </div><br> 
+                <script>
+                    function goBack() {
+                        window.history.back();
+                    }
+                </script>
             <div class="row mt-2" id="thirdTable">
                 <div class="col">
                     <label for="">Phone : </label> <span id="number"> {{details.phone_number}} </span><br>
@@ -174,19 +244,23 @@
             <!-- -------------------transaction----------------------- -->
         
             <div class="row">
-                <div class="col-md transaction-div" style="padding: 40px;border-radius: 8px;box-shadow: 3px 3px 3px gray;">
+                <div class="col-md transaction-div" style="padding: 40px;border-radius: 8px;">
                     <div class="row">
                         <h3 style="color: white;">Transactions</h3>
                         
-                        <input class="form-control col-md-3 mt-2" type="text" style="box-shadow: 2px 2px 2px gray;" autocomplete="off" id="myInput1" onkeyup="filterTransaction(this);" onclick="myFunction1()"  placeholder="search"/>
+                        <input class="form-control col-md-3 mt-2" type="text"  autocomplete="off" id="myInput1" onkeyup="filterTransaction(this);" onclick="myFunction1()"  placeholder="search"/>
 
                         <div class="col-md-5"></div>
 
                         <div class="col" >
                             
-                            <button style="background-color: white;color: #3d4465;" class="btn mb-2 mt-2" onclick="ExportAsPDF()">pdf <i class="fa-solid fa-file-pdf"></i></button>
-                            <button style="background-color: white;color: #3d4465;" class="btn mb-2 mt-2" onclick="printTable()">print <i class="fa-solid fa-print"></i></button>
-                            <button style="background-color: white;color: #3d4465;" class="btn mb-2 mt-2" onclick="exportAsExcel()">excel <i class="fa-solid fa-file-excel"></i></button>
+                            <button class="btn mb-2 mt-2 button-hover" onclick="ExportAsPDF()">PDF <i class="fa-solid fa-file-pdf"></i></button>
+                            <button class="btn mb-2 mt-2 button-hover" onclick="printTable()">Print <i class="fa-solid fa-print"></i></button>
+                            <button class="btn mb-2 mt-2 button-hover" onclick="exportAsExcel()">Excel <i class="fa-solid fa-file-excel"></i></button>
+                            <!-- <button class="btn mb-2 mt-2 button-hover" type="button" onclick="exportAsExcel()" style="margin-right: 2vh; margin-left: 5vh;">
+                                <span><img width="22px" src="{% static 'assets/excel2.png' %}" alt="no img"></span>
+                                <br><span style="color: black; font-size: small; font-weight: bold;">Excel</span>
+                            </button> -->
                         </div>
                     </div><br>
         

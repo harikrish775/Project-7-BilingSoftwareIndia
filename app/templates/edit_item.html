@@ -119,12 +119,28 @@
                         <div class="d-flex">
                           <div class="col-md-3 ">
                             <label class="col-form-label" style="color: black;">TYPE</label>
-                            <select style="color: black;" class="form-control border-dark bg-light" name="type" id="type" value="{{item.item_type}}" required>
+                            <select style="color: black;" class="form-control border-dark bg-light" name="type" id="type" value="{{item.item_type}}" onchange="handleChange()" required>
                                 <option value="{{item.item_type}}" selected hidden>{{item.item_type}}</option>
                                 <option value="Goods">Products</option>
                                 <option value="Services">Services</option>
                             </select>
                         </div>
+                        <!-- script for handlechange() -->
+                        <script>
+                          function handleChange() {
+                            var typeSelect = document.getElementById("type");
+                            var itemLabel = document.getElementById("itemLabel");
+                            var itemInput = document.getElementById("itemInput");
+
+                            if (typeSelect.value === "Goods") {
+                                itemLabel.textContent = "ITEM HSN";
+                                itemInput.placeholder = "ITEM HSN";
+                            } else if (typeSelect.value === "Services") {
+                                itemLabel.textContent = "ITEM SAC";
+                                itemInput.placeholder = "ITEM SAC";
+                            }
+                        }
+                        </script>
 
                             <div class="col-md-3">
                                 <label class="col-form-label" style="color: black;">ITEM NAME</label>
@@ -132,8 +148,8 @@
                             </div>
 
                             <div class="col-md-3">
-                                <label class="col-form-label" style="color: black;">ITEM HSN</label>
-                                <input style="color: black;" class="form-control border-dark ms-2 fw-bolder" type="number" placeholder="ITEM HSN" name="item_hsn" value="{{item.item_hsn}}" required>
+                                <label id="itemLabel" class="col-form-label" style="color: black;">ITEM HSN</label>
+                                <input id="itemInput" style="color: black;" class="form-control border-dark ms-2 fw-bolder" type="number" placeholder="ITEM HSN" name="item_hsn" value="{{item.item_hsn}}" required>
                             </div>
 
                             <div class="col-md-3">

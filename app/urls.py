@@ -72,7 +72,7 @@ urlpatterns = [
     path('check_email_exists',views.check_email_exists,name='check_email_exists'),
     path('check_hsn_exists',views.check_hsn_exists,name='check_hsn_exists'),
 
-    path('edit_debitnote/<int:id>',views.edit_debitnote,name='edit_debitnote'), 
+    path('edit_debitnote/<int:id>',views.edit_debitnote,name='edit_debitnote'),
     
     path('update_debitnote/<int:id>',views.update_debitnote,name='update_debitnote'),
     path('sharedebitToEmail/<int:id>',views.sharedebitToEmail,name='sharedebitToEmail'),
@@ -89,6 +89,13 @@ urlpatterns = [
     path('party_details/<int:pk>/<str:id>',views.party_details,name="party_details"),
 
     path('party_details_first',views.party_details_first,name="party_details_first"),
+    path('party_save_validation_ajax',views.party_save_validation_ajax,name="party_save_validation_ajax"),
+    path('party_edit_validation_ajax/<int:pk>',views.party_edit_validation_ajax,name="party_edit_validation_ajax"),
+    # path('aaa',views.aaa,name="aaa"),
+    # path('aaa',views.aaa,name="aaa"),
+    # path('aaa',views.aaa,name="aaa"),
+    # path('aaa',views.aaa,name="aaa"),
+    # path('aaa',views.aaa,name="aaa"),
 
     # end-----
     
