@@ -91,7 +91,8 @@ urlpatterns = [
     path('party_details_first',views.party_details_first,name="party_details_first"),
     path('party_save_validation_ajax',views.party_save_validation_ajax,name="party_save_validation_ajax"),
     path('party_edit_validation_ajax/<int:pk>',views.party_edit_validation_ajax,name="party_edit_validation_ajax"),
-    # path('aaa',views.aaa,name="aaa"),
+
+    path('create_item_valid_ajax',views.create_item_valid_ajax,name="create_item_valid_ajax"),
     # path('aaa',views.aaa,name="aaa"),
     # path('aaa',views.aaa,name="aaa"),
     # path('aaa',views.aaa,name="aaa"),

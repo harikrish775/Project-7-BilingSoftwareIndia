@@ -402,71 +402,7 @@ def add_item(request):
   return render(request, 'add_item.html',context)
 
 
-def item_create_new(request):
-    if request.method == 'POST':
-        sid = request.session.get('staff_id')
-        staff = staff_details.objects.get(id=sid)
-        cmp = company.objects.get(id=staff.company.id)
 
-        item_name = request.POST.get('item_name')
-        item_hsn = request.POST.get('item_hsn')
-
-        if ItemModel.objects.filter(item_name=item_name, company=cmp).exists() or \
-                ItemModel.objects.filter(item_hsn=item_hsn, company=cmp).exists():
-            messages.error(request, 'Item Name or HSN already exists. Please choose a different Name or HSN.')
-            return render(request, 'add_item.html')
-        if len(item_hsn) < 6:
-            messages.error(request, 'Item HSN must be 6 digits or more.')
-            return render(request, 'add_item.html')
-
-        item_unit = request.POST.get('item_unit')
-        item_type = request.POST.get('type')
-        item_taxable = request.POST.get('item_taxable')
-        item_gst = request.POST.get('item_gst')
-        item_igst = request.POST.get('item_igst')
-        item_sale_price = request.POST.get('saleprice')
-        item_purchase_price = request.POST.get('purprice')
-        item_opening_stock = request.POST.get('item_opening_stock')
-        item_current_stock = item_opening_stock
-        if item_opening_stock == '' or None:
-            item_opening_stock = 0
-            item_current_stock = 0
-        item_at_price = request.POST.get('item_at_price')
-        if item_at_price == '' or None:
-            item_at_price = 0
-        item_date = request.POST.get('itmdate')
-
-        item_data = ItemModel(user=staff.company.user,
-                              company=cmp,
-                              staff=staff,
-                              item_name=item_name,
-                              item_hsn=item_hsn,
-                              item_unit=item_unit,
-                              item_type=item_type,
-                              item_taxable=item_taxable,
-                              item_gst=item_gst,
-                              item_igst=item_igst,
-                              item_sale_price=item_sale_price,
-                              item_purchase_price=item_purchase_price,
-                              item_stock_in_hand=item_opening_stock,
-                              item_current_stock=item_current_stock,
-                              item_at_price=item_at_price,
-                              item_date=item_date)
-        item_data.save()
-
-        tr_history = ItemTransactionHistory(company=cmp,
-                                            staff=staff,
-                                            item=item_data,
-                                            action="CREATED",
-                                            done_by_name=staff.first_name,)
-        tr_history.save()
-
-        if request.POST.get('save_and_next'):
-            return redirect('add_item')
-        elif request.POST.get('itemsave'):
-            return redirect('view_item')
-
-    return render(request, 'add_item.html')
 
 
 
@@ -4248,5 +4184,88 @@ def party_edit_validation_ajax(request,pk):
            
         else:
           return JsonResponse({'success':True})
+
+def create_item_valid_ajax(request):
+    if request.method == 'POST':
+        sid = request.session.get('staff_id')
+        staff = staff_details.objects.get(id=sid)
+        cmp = company.objects.get(id=staff.company.id)
+
+        item_name = request.POST.get('item_name')
+        item_hsn = request.POST.get('item_hsn')
+
+        if ItemModel.objects.filter(item_name=item_name, company=cmp).exists() or \
+                ItemModel.objects.filter(item_hsn=item_hsn, company=cmp).exists():
+            return JsonResponse({'error': 'Item Name or HSN already exists. Please choose a different Name or HSN.'})
+        if len(item_hsn) < 6:
+            return JsonResponse({'error': 'Item HSN must be 6 digits or more.'})
+
+        return JsonResponse({'success': True})
+
+def item_create_new(request):
+    if request.method == 'POST':
+        sid = request.session.get('staff_id')
+        staff = staff_details.objects.get(id=sid)
+        cmp = company.objects.get(id=staff.company.id)
+
+        item_name = request.POST.get('item_name')
+        item_hsn = request.POST.get('item_hsn')
+
+        if ItemModel.objects.filter(item_name=item_name, company=cmp).exists() or \
+                ItemModel.objects.filter(item_hsn=item_hsn, company=cmp).exists():
+            messages.error(request, 'Item Name or HSN already exists. Please choose a different Name or HSN.')
+            return render(request, 'add_item.html')
+        if len(item_hsn) < 6:
+            messages.error(request, 'Item HSN must be 6 digits or more.')
+            return render(request, 'add_item.html')
+
+        item_unit = request.POST.get('item_unit')
+        item_type = request.POST.get('type')
+        item_taxable = request.POST.get('item_taxable')
+        item_gst = request.POST.get('item_gst')
+        item_igst = request.POST.get('item_igst')
+        item_sale_price = request.POST.get('saleprice')
+        item_purchase_price = request.POST.get('purprice')
+        item_opening_stock = request.POST.get('item_opening_stock')
+        item_current_stock = item_opening_stock
+        if item_opening_stock == '' or None:
+            item_opening_stock = 0
+            item_current_stock = 0
+        item_at_price = request.POST.get('item_at_price')
+        if item_at_price == '' or None:
+            item_at_price = 0
+        item_date = request.POST.get('itmdate')
+
+        item_data = ItemModel(user=staff.company.user,
+                              company=cmp,
+                              staff=staff,
+                              item_name=item_name,
+                              item_hsn=item_hsn,
+                              item_unit=item_unit,
+                              item_type=item_type,
+                              item_taxable=item_taxable,
+                              item_gst=item_gst,
+                              item_igst=item_igst,
+                              item_sale_price=item_sale_price,
+                              item_purchase_price=item_purchase_price,
+                              item_stock_in_hand=item_opening_stock,
+                              item_current_stock=item_current_stock,
+                              item_at_price=item_at_price,
+                              item_date=item_date)
+        item_data.save()
+
+        tr_history = ItemTransactionHistory(company=cmp,
+                                            staff=staff,
+                                            item=item_data,
+                                            action="CREATED",
+                                            done_by_name=staff.first_name,)
+        tr_history.save()
+
+        if request.POST.get('clickedButtonValue') == 'save_and_next':
+            return redirect('add_item')
+        else:
+            return redirect('view_item')
+
+    return render(request, 'add_item.html')
 
 # end ----------------

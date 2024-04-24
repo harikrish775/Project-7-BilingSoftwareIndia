@@ -121,7 +121,7 @@
     <div class="row p-0 m-0" >
       <div class="col-12  p-0 m-0">
 <div class=" pb-0 mb-0 p-2" style="height:100%;width:100%; background-color: #8290c7;">           
-          <form action="{% url 'item_create_new' %}" method="post"  >
+          <form action="{% url 'item_create_new' %}" method="post" id="itemForm" >
             {% csrf_token %}
 
             <div class="main"  >
@@ -168,12 +168,12 @@
 
                             <div class="col-md-3">
                                 <label class="col-form-label" style="color: black;">ITEM NAME</label>
-                                <input style="color: black;" class="form-control border-dark fw-bolder" type="text" placeholder="ITEM NAME" autocomplete="off" name="item_name" required>
+                                <input style="color: black;" class="form-control border-dark fw-bolder" type="text" placeholder="ITEM NAME" autocomplete="off" name="item_name" id="item_name" required>
                             </div>
 
                             <div class="col-md-3">
                                 <label id="itemLabel" class="col-form-label" style="color: black;">ITEM HSN</label>
-                                <input id="itemInput" style="color: black;" class="form-control border-dark ms-2 fw-bolder" type="number" placeholder="ITEM HSN" name="item_hsn" required>
+                                <input id="itemInput" style="color: black;" class="form-control border-dark ms-2 fw-bolder" type="number" placeholder="ITEM HSN" name="item_hsn" id="item_hsn" required>
                             </div>
 
                             <div class="col-md-3">
@@ -275,9 +275,12 @@
                                           <label class="tb fw-bold" for="itmdate">DATE</label>
                                           <input id="itmdate" class="form-control" type="date" required name="itmdate" value="{{date}}">
                                       </div>
+                                      
+                                      <input type="hidden" id="clickedButtonValue" name="clickedButtonValue">
+
                                       <div class="text-center mt-4">
-                                          <button class="btn btn-custom" type="submit" name="save_and_next" value="save_and_next">SAVE & NEXT</button>
-                                          <button class="btn btn-custom" type="submit" name="itemsave" value="itemsave" id="itemsave">SAVE</button>
+                                          <button class="btn btn-custom" type="submit" name="save_and_next" value="save_and_next" onclick="updateClickedButtonValue(this.value)">SAVE & NEXT</button>
+                                          <button class="btn btn-custom" type="submit" name="itemsave" value="itemsave" id="itemsave" onclick="updateClickedButtonValue(this.value)">SAVE</button>
                                       </div>
                                   </div>
                               </div>
@@ -285,6 +288,41 @@
                       </div>
                       </div>
           </form>
+
+          <script>
+            function updateClickedButtonValue(value) {
+              document.getElementById('clickedButtonValue').value = value;
+          }
+              $(document).ready(function() {
+                $('#itemForm').submit(function(event) {
+                    // Prevent default form submission behavior
+                    event.preventDefault();
+
+                    // AJAX request
+                    $.ajax({
+                        type: 'POST',
+                        url: "{% url 'create_item_valid_ajax' %}",
+                        headers: {
+                            "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+                        },
+                        data: $('#itemForm').serialize(),
+                        success: function(response) {
+                            if (response.success) {
+                                $('#itemForm').unbind('submit').submit(); // Submit the form if validation succeeds
+                            } else {
+                                alert(response.error); // Alert the error message if validation fails
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // Handle error
+                            console.error(xhr.responseText);
+                        }
+                    });
+                });
+            });
+
+
+        </script>
   
           <!-- modal start -->
           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
