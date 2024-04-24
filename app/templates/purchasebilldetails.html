@@ -12,7 +12,8 @@
     @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap');
 
     body {
-        background-color: var(--body-bg);
+        /* background-color: var(--body-bg); */
+        background-color: #8290c7;
     }
 
     .page {
@@ -163,55 +164,91 @@
     ::-webkit-scrollbar{
         display: none
     }
+
+    @media(min-width:768px){
+            .details-div{
+            background: linear-gradient(#3d4465 0%, #3d4465 178px, white 17px, white 100%);
+        }
+        .body-wrapper{
+            margin-left: 23%;
+        }
+        }
+    @media(max-width:768px){
+            .details-div{
+            background: linear-gradient(#3d4465 0%, #3d4465 170px, white 17px, white 100%);
+        }
+        }
+
+    .selected-column{
+        background-color:white;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        color: #3d4465; 
+        text-decoration: none;
+    }
+    #templateToggle{
+        display: flex;
+    }
+
+    .button-hover{
+        background-color: white;
+        color: #3d4465;
+    }
+    .button-hover:hover{
+        background-color:#4d5fbc ;
+        color: white;
+    }
+    
 </style>
 <body>
-    <br><br><br><br><br><br>
-<div class="body-wrapper" style="margin-left:23%;">
+    <br>
+    
+<div class="body-wrapper " >
     <br><br><br>
-    <div class="row p-0 m-0">
-        <div class="col-11 p-0 m-0">
-            <div class=" bg-light bg-light pb-0 mb-0 p-2" style="height:100%;width:100%">
+    <div class="row p-0 m-0 ">
+        <div class="col-md-11 p-0 m-0 ">
+            <div class=" pb-0 mb-0 p-2 " style="height:100%;width:100%">
                 
-                <p></p>
-                <div class="page-content">
-                    <div class="card radius-15">
-                        <div class="card-body bg-light">
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <h3 class="mb-4">PURCHASE BILL DETAILS</h3> 
+                <!-- <p></p> -->
+                <div class="page-content ">
+                    <div class="card radius-15 details-div">
+                        <div class="card-body ">
+                            <div class="row mt-3">
+                                <div class="col-md-7 ">
+                                    <h3 class="mb-4 text-white">PURCHASE BILL DETAILS</h3> 
                                 </div>
                                 
-                                <div class="col-md-6" style="margin-left:8%;">
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <a class="btn ml-5" onclick="printfun()"><img width="30px" src="{% static 'images/printer.jpeg' %}" alt="no img"> <br>Print</a>
-                                    <a class="btn ml-1" id="pdflink"><img width="20px" src="{% static 'images/p.jpg' %}" alt="no img"><br>Pdf</a>
-                                    <a class="btn ml-1" onclick="toggleDropdown()"> <img width="30px" src="{% static 'images/send.jpg' %}" alt="no img" ><br>Share</a>
+                                <div class="col-md" style="color: #3d4465;">
+                                    <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+                                    <a class="btn ml-1 button-hover" onmouseenter="this.style.color='white'" onmouseleave="this.style.color='#343957'" onclick="printfun()">Print <i class="fa-solid fa-print"></i></a>
+                                    <a class="btn ml-1 button-hover" id="pdflink">Pdf <i class="fa-solid fa-file-pdf"></i></a>
+                                    <a class="btn ml-1 button-hover" onclick="toggleDropdown()">Share <i class="fa-solid fa-share"></i></a>
                                     <div class="dropdown-content" id="myDropdown">
                                         <ul style="margin-bottom: -1px;">{% post_to_whatsapp object_or_url "WhatsApp" %}</ul>
 
                                         <ul style="margin-bottom: -1px;"><a onclick="toggleEmailModal()">Email</a></ul>
                                     </div>
-                                    <a class="ml-4" href="{% url 'view_purchasebill' %}" style="text-align: right; font-size: large; color: black;">
+                                    <a class="ml-4 text-white" href="{% url 'view_purchasebill' %}" style="text-align: right; font-size: large; color: black;">
                                         <i class="fa fa-times mt-2" aria-hidden="true"></i>
                                     </a>
                                 </div>
                             </div>
                             <br>
-                            <div class="row pb-0 mb-0 mt-1" style="margin-top:-2vh">
-                                <div id="templates" class="col text-center pb-2 pt-3" style="background-color:rgb(130, 144, 199); color:white;"  >
-                                    <a class="fw-bolder fs-4" style="color: white; text-decoration: none; " >TEMPLATE</a>
+                            <div class="row pb-0 mb-0 mt-1" style="margin-top:-2vh;color: white;">
+                                <div id="templates" class="col text-center pb-1 pt-3 "  >
+                                    <a class="fw-bolder fs-5" >TEMPLATE</a>
                                 </div>
                                 <br><br><br>
-                                <div id="slip" class="col text-center pb-2 pt-3" style="background-color:rgb(130, 144, 199); color:white;">
-                                    <a class="fw-bolder fs-4" style="color: white; text-decoration: none;" >BILL SLIP</a>
+                                <div id="slip" class="col text-center pb-1 pt-3 slip-div" >
+                                    <a class="fw-bolder fs-5"  >BILL SLIP</a>
                                 </div>
                                 <br><br><br>
                             </div>
-                            <div id="templateToggle" class="templateToggleSegment mt-3 mb-0 w-100 d-flex justify-content-center">
+                            <!-- <div id="templateToggle" class="templateToggleSegment mt-3 mb-0 w-100 d-flex justify-content-center">
                                 <button id="toggleTemplate1" onclick="toggleTemplate('whatToPrint1','toggleTemplate1')" class="btn  btn-sm m-2 active templateToggleButtons"  style="background-color:rgb(61, 68, 101);color:white;">1</button>
                                 <button id="toggleTemplate2" onclick="toggleTemplate('whatToPrint2','toggleTemplate2')" class="btn  btn-sm m-2 templateToggleButtons"style="background-color:rgb(61, 68, 101);color:white;">2</button>
                                 <button id="toggleTemplate3" onclick="toggleTemplate('whatToPrint3','toggleTemplate3')" class="btn btn-sm m-2 templateToggleButtons" style="background-color:rgb(61, 68, 101);color:white;">3</button>
-                            </div>
+                            </div> -->
                             
                             
                             <div id="templatediv" style=" border-radius: 2vh;">
@@ -644,6 +681,11 @@
                                 </div>
                                 
                             </div>
+                            <div id="templateToggle" class="templateToggleSegment mt-3 mb-0 w-100 justify-content-center" >
+                                <button id="toggleTemplate1" onclick="toggleTemplate('whatToPrint1','toggleTemplate1')" class="btn  btn-sm m-2 active templateToggleButtons"  style="background-color:rgb(61, 68, 101);color:white;">1</button>
+                                <button id="toggleTemplate2" onclick="toggleTemplate('whatToPrint2','toggleTemplate2')" class="btn  btn-sm m-2 templateToggleButtons"style="background-color:rgb(61, 68, 101);color:white;">2</button>
+                                <button id="toggleTemplate3" onclick="toggleTemplate('whatToPrint3','toggleTemplate3')" class="btn btn-sm m-2 templateToggleButtons" style="background-color:rgb(61, 68, 101);color:white;">3</button>
+                            </div>
 <br><br><br>
                             <div id="slipdiv" style="border-radius: 2vh; display: none;">
                                 <div class="my-5 page" size="A4">
@@ -960,19 +1002,21 @@
 
 <script>
     $(document).ready(function(){
-        $('#templates').css({'border-bottom': '3px solid rgba(0, 0, 0, 0.548)'})
-        $('#slip a').removeClass('text-dark')
-        $('#templates a').addClass('text-dark')
+        $('#templates').css({'border-bottom': 'none'})
+        $('#slip').removeClass('selected-column')
+        $('#templates').addClass('selected-column')
         $('#slip').css({'border-bottom': 'none'})
         $('#templatediv').attr('hidden',false)
+        $('#templateToggle').css({'display': 'flex'})
         $('#slipdiv').attr('hidden',true)
 
         $('#templates').on('click',function(){
-            $(this).css({'border-bottom': '3px solid rgba(0, 0, 0, 0.548)'})
-            $('#slip a').removeClass('text-dark')
-            $('#templates a').addClass('text-dark')
+            $(this).css({'border-bottom': 'none'})
+            $('#slip').removeClass('selected-column')
+            $('#templates').addClass('selected-column')
             $('#slip').css({'border-bottom': 'none'})
             $('#templatediv').attr('hidden',false)
+            $('#templateToggle').css({'display': 'flex'})
             $('#slipdiv').attr('hidden',true)
             document.getElementById('slipdiv').style.display = 'none';
         })
@@ -980,11 +1024,12 @@
 
     $(document).ready(function(){
         $('#slip').on('click',function(){
-        $('#slip').css({'border-bottom': '3px solid rgba(0, 0, 0, 0.548)'})
-        $('#templates a').removeClass('text-dark')
-        $('#slip a').addClass('text-dark')
+        $('#slip').css({'border-bottom': 'none'})
+        $('#templates').removeClass('selected-column')
+        $('#slip').addClass('selected-column')
         $('#templates').css({'border-bottom': 'none'})
         $('#templatediv').attr('hidden',true)
+        $('#templateToggle').css({'display': 'none'})
         $('#slipdiv').attr('hidden',false)
         document.getElementById('slipdiv').style.display = 'block';
         })

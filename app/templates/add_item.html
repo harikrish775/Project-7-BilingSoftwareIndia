@@ -12,7 +12,7 @@
 
 <style>
     body {
-        background-color: #f8f9fa;
+        background-color: #8290c7;
     }
 
     .container {
@@ -20,9 +20,11 @@
     }
 
     .custom-card {
-        background-color: white;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
+        /* background: #8290c7; */
+        /* background: linear-gradient(#343957 0%, #343957 50px, white 17px, white 100%); */
+        box-shadow: 0 0 2px rgba(0, 0, 0);
+        /* border: 3px solid #8290c7; */
+        border-radius: 8px;
         padding: 20px;
         margin-bottom: 20px;
    
@@ -98,6 +100,19 @@
     .position-relative{
         background-color: #8290c7;
     }
+
+    .item-div{
+      background: linear-gradient(#3d4465 0%, #3d4465 80px, white 17px, white 100%);
+    }
+
+    .button-hover{
+        background-color: white;
+        color: #3d4465;
+    }
+    .button-hover:hover{
+        background-color:#4d5fbc ;
+        color: white;
+    }
   </style>
   
   <div class="content-body">
@@ -105,27 +120,27 @@
     <div class="container-fluid">
     <div class="row p-0 m-0" >
       <div class="col-12  p-0 m-0">
-<div class="bg-light bg-light pb-0 mb-0 p-2" style="height:100%;width:100%; background-color: #8290c7;">           
-          <form action="{% url 'item_create_new' %}" method="post" >
+<div class=" pb-0 mb-0 p-2" style="height:100%;width:100%; background-color: #8290c7;">           
+          <form action="{% url 'item_create_new' %}" method="post"  >
             {% csrf_token %}
 
-            <div class="main" >
-              {% if messages %}
+            <div class="main"  >
+              <!-- {% if messages %}
               {% for message in messages %}
-                  <label for="" class="text-center" style="background-color: rgb(255, 0, 0,0.5); width: 50%;color:white;text-shadow: 2px 2px 4px #000000;padding: 10px; border-radius: 10px; margin-left: 16vw; ">{{message}}</label>
+                  <label for="" class="text-center" style=" width: 50%;color:white;text-shadow: 2px 2px 4px #000000;padding: 10px; border-radius: 10px; margin-left: 16vw; ">{{message}}</label>
               {% endfor %}
-           {% endif %}
+           {% endif %} -->
                   
-                    <div class=" bs p-4 rounded mb-5" style="background-color: #8290c7;">
-                         <div class="d-md-flex d-sm-block">
-                          <h5><strong class="fw-bolder">ADD ITEM</strong></h5>
-                          <div style="text-align: right;" class="col"><a style="background-color: #3d4465; color: white;" onmouseover="this.style.backgroundColor='#480ceb'" onmouseout="this.style.backgroundColor='#3d4465'" class="btn " href="{% url 'view_item' %}"><i class="fa fa-arrow-left"></i> Back</a></div> 
+                    <div class="p-4 rounded mb-5 item-div" style="background-color: white;">
+                         <div class="row d-md-flex d-sm-block">
+                          <h5 class="col mt-3"><strong class="fw-bolder text-white fs-3">ADD ITEM</strong></h5>
+                          <div style="text-align: right;" class="col"><a class="btn button-hover" href="{% url 'view_item' %}"><i class="fa fa-arrow-left"></i> Back</a></div> 
                           
                         </div> 
                       <br>
                       <div id="main_form_div">
                         
-                        <div class="row">
+                        <div class="row mx-1">
                           <div class="col-md-3 ">
                             <label class="col-form-label" style="color: black;">TYPE</label>
                             <select style="color: black;" class="form-control border-dark bg-light" name="type" id="type" onchange="handleChange()" required>
@@ -190,6 +205,7 @@
                                   <div class="custom-card">
                                       <div class="text-center mb-4">
                                           <h2 class="fw-bold">PRICING</h2>
+                                          
                                       </div>
                                       <div class="form-group text-center">
                                           <label class="fs-4 tb" style="user-select: none;">
@@ -205,7 +221,7 @@
                                       <div hidden id="taxable_hide" class="mb-3">
                                           <div class="d-flex">
                                             <div class="col-md-6" style="margin-left: -10px;">
-                                                  <label class="fw-bold tb fs-3" for="">GST</label><br>
+                                                  <label class="fw-bold tb fs-5" for="">GST</label><br>
                                                   <select style="color: black;background-color: white;" class="form-control fw- border-secondary fs-3" id="" placeholder="GST" name="item_gst">
                                                       <option value="GST0[0%]" selected>GST0[0%]</option>
                                                       <option value="GST3[3%]">GST3[3%]</option>
@@ -216,7 +232,7 @@
                                                   </select>
                                               </div>
                                               <div class="col-md-6" style="margin-left: 10px;">
-                                                  <label class="fw-bold tb fs-3" for="">IGST</label><br>
+                                                  <label class="fw-bold tb fs-5" for="">IGST</label><br>
                                                   <select style="color: black;background-color: white;" class="form-control fw- border-secondary tb fs-3" id="" placeholder="GST" name="item_igst">
                                                       <option value="IGST0[0%]" selected>IGST0[0%]</option>
                                                       <option value="IGST3[3%]">IGST3[3%]</option>
@@ -274,9 +290,9 @@
           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">ADD UNIT</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+                <div class="modal-header" style="background-color: #343957;">
+                  <h1 class="modal-title fs-5 text-white"  id="exampleModalLabel">ADD UNIT</h1>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" ></button>
                 </div>
                 <div class="modal-body mb-1 pb-1">
                   <form class="mb-0" action="{% url 'item_unit_create' %}" method="POST" id="unit_form">

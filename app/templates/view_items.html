@@ -85,43 +85,82 @@
     }
 }
 
+@media(min-width:768px){
+        .item-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 90px, white 17px, white 100%);
+    }
+    .tran-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 194.7px, white 17px, white 100%);
+    }
+    .abc{
+        margin-left: 10vw;
+    }
+    
+    }
+@media(max-width:768px){
+        .item-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 165px, white 17px, white 100%);
+    }
+    .tran-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 290px, white 17px, white 100%);
+    }
+    .button-hover{
+        margin-top: 10px;
+        /* margin-left: -10px; */
+    }
+    
+    }
+
+.button-hover{
+        background-color: white;
+        color: #3d4465;
+    }
+    .button-hover:hover{
+        background-color:#4d5fbc ;
+        color: white;
+    }
 </style>
 
 
 
 
-<div class="content-body" style="background-color: white;">
+<div class="content-body" >
     <!-- row -->
     <div class="container-fluid">
         <div class="row" >
                 
             <!-- --------------------name--------------------- -->
         
-            <div class="col-11 " style="background-color: rgb(130, 144, 199);padding: 20px;border-radius: 15px;box-shadow: 3px 3px 3px gray; margin-left: 2vw;" >
+            <div class="col-11 item-div" style="background-color: white ;padding: 20px;border-radius: 8px; margin-left: 2vw;" >
                 <div class="row">
-                    <div class="col">
-                        <p class="tb fw-bolder fs-2" style="color: black;">{{ first_item.item_name|upper }} <span class="fa fa-share ps-1 tb"></span></p>
+                    <div class="col-md-8">
+                        <p class="tb fw-bolder fs-5 text-white" style="color: black;">{{ first_item.item_name|upper }} <span class="fa fa-share ps-1 tb"></span></p>
                     <h3 id="namee" style="text-transform: uppercase;font-size: 25px;" ></h3></div>
                  
-                    <button class="btn btn-sm  fs-2" style="background-color: #3d4465; color: white; text-align: right; margin-left: 32vw;" data-bs-toggle="modal" data-bs-target="#myModal1" data-bs-whatever="@getbootstrap"
-                    hx-get="{% url 'itemmodaladjust' first_item.id %}"
-                    hx-trigger="click delay:0s"
-                    hx-target="#item_get_details_for_modal_target"
-                    ><span class="fa fa-sliders-h pe-1"></span> ADJUSTMENT ITEM</button>                    
-                     <div style="text-align: right;" class="col"><a style="background-color: #3d4465; color: white;" onmouseover="this.style.backgroundColor='#480ceb'" onmouseout="this.style.backgroundColor='#3d4465'" class="btn " href="{% url 'view_item' %}"><i class="fa fa-arrow-left"></i> Back</a></div> 
+                      
+
+                     <div style="text-align: right;" class="col-md-4 ">
+                        <button style="height: 40px;" class=" btn button-hover mb-2" data-bs-toggle="modal" data-bs-target="#myModal1" data-bs-whatever="@getbootstrap"
+                        hx-get="{% url 'itemmodaladjust' first_item.id %}"
+                        hx-trigger="click delay:0s"
+                        hx-target="#item_get_details_for_modal_target"
+                        ><span class="fa fa-sliders-h "></span> ADJUSTMENT ITEM</button>  
+                        
+                        <a class="btn button-hover mb-md-2" href="{% url 'view_item' %}"><i class="fa fa-arrow-left"></i> Back</a>
+                    </div> 
                     </div><br>
                      
             <div class="row" id="thirdTable" style="color: black;">
-                <div class="col">
+                <div class="col-md">
                     <div class="">
-                        <p class="tb fw-bolder fs-2">SALE PRICE  <span class="ps-2 tg">: ₹{{ first_item.item_sale_price }}</span></p>
-                        <p class="tb fw-bolder fs-2">STOCK QUANTITY  <span class="ps-2 tg">: {{ first_item.item_current_stock }}</span></p>
+                        <p class="tb fw-bolder fs-5">SALE PRICE  <span class="ps-2 tg">: ₹{{ first_item.item_sale_price }}</span></p>
+                        <p class="tb fw-bolder fs-5">STOCK QUANTITY  <span class="ps-2 tg">: {{ first_item.item_current_stock }}</span></p>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="" style="margin-left: 10vw;">
-                        <p class="tb fw-bolder fs-2">PURCHASE PRICE  <span class="ps-2 tg">: ₹{{ first_item.item_purchase_price }}</span></p>
-                        <p class="tb fw-bolder fs-2">STOCK VALUE  <span class="ps-2 tg">: ₹{{ first_item.item_current_stock|mul:first_item.item_purchase_price }}</span></p>
+                <div class="col-md">
+                    <div class="abc">
+                        <p class="tb fw-bolder fs-5">PURCHASE PRICE  <span class="ps-2 tg">: ₹{{ first_item.item_purchase_price }}</span></p>
+                        <p class="tb fw-bolder fs-5">STOCK VALUE  <span class="ps-2 tg">: ₹{{ first_item.item_current_stock|mul:first_item.item_purchase_price }}</span></p>
                     </div>
                 </div>
                 
@@ -137,17 +176,18 @@
             <!-- -------------------transaction----------------------- -->
         
             <div class="row">
-                <div class="col-11" style="background-color: rgb(130, 144, 199); padding: 40px;border-radius: 15px;box-shadow: 3px 3px 3px gray; margin-left: 2vw;">
-                    <div class="row">
-                        <h3>Transactions</h3>
+                <div class="col-11 tran-div mb-3" style="background-color: white ; padding: 40px;border-radius: 8px; margin-left: 2vw;min-height: 50vh;">
+                    <div class="row ">
+                        <h3 class="text-white">Transactions</h3>
                         
-                        <input type="text" style="box-shadow: 2px 2px 2px gray;" autocomplete="off" id="myInput1"  class="form-control col-3 ml-2" placeholder="search"/>
-        
-                        <div class="ml-auto ">
-                            
-                            <button style="background-color: #3d4465;color: white;" onmouseover="this.style.backgroundColor='#480ceb'" onmouseout="this.style.backgroundColor='#3d4465'" class="btn " onclick="ExportAsPDF()">pdf <i class="fa fa-file-pdf"></i></button>
-                            <button style="background-color: #3d4465;color: white;" onmouseover="this.style.backgroundColor='#480ceb'" onmouseout="this.style.backgroundColor='#3d4465'" class="btn " onclick="printTable('{{ item_name }}')">print <i class="fa fa-print"></i></button>
-                            <button style="background-color: #3d4465;color: white;" onmouseover="this.style.backgroundColor='#480ceb'" onmouseout="this.style.backgroundColor='#3d4465'" class="btn " onclick="exportAsExcel()">excel <i class="fa fa-file-excel"></i></button>
+                        <input class="form-control col-md-3 ml-md-2" type="text"  autocomplete="off" id="myInput1"   placeholder="search"/>
+                        <div class="col-md-5"></div>
+                        <div class="col-md" style="display: flex;direction: rtl;">
+                            <div >
+                                <button class="btn button-hover" style="direction: ltr;" onclick="ExportAsPDF()">PDF  <i class="fa-solid fa-file-pdf"></i></button>
+                                <button class="btn button-hover" style="direction: ltr;" onclick="printTable('{{ item_name }}')">print <i class="fa-solid fa-print"></i></button>
+                                <button class="btn button-hover" style="direction: ltr;" onclick="exportAsExcel()">excel <i class="fa-solid fa-file-excel"></i></button>
+                            </div>
                         </div>
                     </div><br>
         
@@ -157,19 +197,19 @@
                         
                             <table class="table" id="detailsTable">
                                 <thead>
-                                    <th class="text-center fs-2">TYPE </th>
-                                    <th class="text-center fs-2">INVOICE </th>
-                                    <th class="text-center fs-2">NAME</th>
-                                    <th class="text-center fs-2">DATE </th>
-                                    <th class="text-center fs-2">QUANTITY</th>
-                                    <th class="text-center fs-2">PRICE</th>
-                                    <th class="text-center fs-2 balance-column ">Balance</th>
-                                    {% comment %} <th class="text-center fs-2">ACTION</span></th>
-                                    <th class="text-center ">BY</th> {% endcomment %}
-                                    <th class="text-center pdf-hidden"></th>
+                                    <th style="color: white;background-color: #3d4465;" class="text-center ">TYPE </th>
+                                    <th style="color: white;background-color: #3d4465;" class="text-center ">INVOICE </th>
+                                    <th style="color: white;background-color: #3d4465;" class="text-center ">NAME</th>
+                                    <th style="color: white;background-color: #3d4465;" class="text-center ">DATE </th>
+                                    <th style="color: white;background-color: #3d4465;" class="text-center ">QUANTITY</th>
+                                    <th style="color: white;background-color: #3d4465;" class="text-center ">PRICE</th>
+                                    <th style="color: white;background-color: #3d4465;" class="text-center  balance-column ">Balance</th>
+                                    {% comment %} <th style="color: white;background-color: #3d4465;" class="text-center ">ACTION</span></th>
+                                    <th style="color: white;background-color: #3d4465;" class="text-center ">BY</th> {% endcomment %}
+                                    <th style="color: white;background-color: #3d4465;" class="text-center pdf-hidden"></th>
                                     
                                 </thead>
-                                <tbody>
+                                <tbody style="min-height: 80vh;">
                                     {% for i in transactions %}
                                     <tr  class="item-row" id="transaction_{{ i.pk }}">
                                         <td class="text-center">{{i.trans_type}}</td>
@@ -231,7 +271,7 @@
             <div id="item_get_details_for_modal_target">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Modal 1</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     Content for Modal 1 goes here.

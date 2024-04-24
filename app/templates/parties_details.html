@@ -72,7 +72,7 @@
         min-height:90vh;
     }
     .transaction-div{
-        background: linear-gradient(#3d4465 0%, #3d4465 135px, white 20%, white 100%);
+        background: linear-gradient(#3d4465 0%, #3d4465 135px, white 135px, white 100%);
         min-height: 59vh;
     }
     .whhole{
@@ -82,12 +82,12 @@
 
     @media(max-width:768px){
         .firstcolumn-div{
-        background: linear-gradient(#3d4465 0, #3d4465 166px, white 0, white 100px);
+        background: linear-gradient(#3d4465 0, #3d4465 166px, white 166px, white 100px);
         min-height:10vh;
         
     }
     .transaction-div{
-        background: linear-gradient(#3d4465 0%, #3d4465 180px, white 20%, white 100%);
+        background: linear-gradient(#3d4465 0%, #3d4465 180px, white 180px, white 100%);
         min-height: 10vh;
     }
     .whhole{
@@ -95,12 +95,12 @@
     }
     }
     .button-hover{
-        background-color: aliceblue;
+        background-color: white;
         color: #3d4465;
     }
     .button-hover:hover{
         background-color:#4d5fbc ;
-        color: aliceblue;
+        color: white;
     }
 </style>
 
@@ -175,11 +175,7 @@
                 {% else %}
                 <td class="col-4" style="color: crimson ">{{i.total_amount}}</td>
                 {% endif %}
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" >                              
-                    <a title="Edit Profile" id="editt" class="dropdown-item" href="{% url 'party_edit' pk=i.phone_number id=i.party_name %}" >Edit </a>
-                    <a class="dropdown-item" href="{% url 'parties_history' pk=i.phone_number id=i.party_name %}" title="{{ i.party_name }}'s History"> History </a>
-                    <a class="dropdown-item" href="{% url 'party_delete' pk=i.phone_number %}" >Delete </a>
-                  </div>
+                
                 <td class="col-4">
                     <div class="row">
                         <!-- <div class="col"> 
@@ -192,9 +188,9 @@
                             </a>
                           
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" >                              
-                              <a title="Edit Profile" id="editt" class="dropdown-item" href="{% url 'party_edit' pk=i.phone_number id=i.party_name %}" >Edit  </a>
-                              <a class="dropdown-item" href="{% url 'parties_history' pk=i.phone_number id=i.party_name %}" title="{{ i.party_name }}'s History"> History</a>
-                              <a class="dropdown-item" href="{% url 'party_delete' pk=i.phone_number %}" >Delete </a>
+                              <a title="Edit Profile" id="editt" class="dropdown-item" href="{% url 'party_edit' pk=i.phone_number id=i.party_name %}" >Edit <span class="fa fa-edit pe-2 " style="color: #E4A11B;"></a>
+                              <a class="dropdown-item" href="{% url 'parties_history' pk=i.phone_number id=i.party_name %}" title="{{ i.party_name }}'s History"> History <span class="fa fa-history pe-2 " style="color: rgb(12, 79, 234);"></span></a>
+                              <a class="dropdown-item" href="{% url 'party_delete' pk=i.phone_number %}" >Delete <span class="fa-solid fa-trash" style="padding-inline-start: 0.1rem;padding-inline-end:0.7rem; color:red;"></span></a>
                             </div>
                           </div>
                     </div>

@@ -16,18 +16,38 @@
         background-color: rgb(130, 144, 199);
         
     }
+    @media(min-width:768px){
+        .history-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 134px, white 17px, white 100%);
+    }
+    }
+    @media(max-width:768px){
+        .history-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 133.5px, white 17px, white 100%);
+    }    
+    }
+
+    .button-hover{
+        background-color: white;
+        color: #3d4465;
+    }
+    .button-hover:hover{
+        background-color:#4d5fbc ;
+        color: white;
+    }
     
 </style>
 
-<div class="content-body" style="background-color: white;">    
-   <div class="container col-md-11" style="box-shadow: 3px 3px 3px gray;border-radius: 15px;padding: 20px;background-color: rgb(130, 144, 199);">
-    <h2> History <div style="float: right;"><a style="background-color: #3d4465;color: white;" onmouseover="this.style.backgroundColor='#480ceb'" onmouseout="this.style.backgroundColor='#3d4465'" class="btn " href="{% url 'item_create_new' %}"><i class="fa fa-plus"></i>  Add new Item</a> <a style="background-color: #3d4465;color: white;" onmouseover="this.style.backgroundColor='#480ceb'" onmouseout="this.style.backgroundColor='#3d4465'" class="btn " href="{% url 'view_item' %}"><i class="fa fa-arrow-left"></i> Back</a> </div></h2>
+<div class="content-body" >    
+   <div class="container col-md-11 history-div" style="box-shadow: 3px 3px 3px gray;border-radius: 15px;padding: 20px;background-color: rgb(130, 144, 199);">
+    <h2 class="text-white ml-md-2"> History <div style="float: right;"><a  class="btn button-hover" href="{% url 'item_create_new' %}"><i class="fa fa-plus"></i>  Add new Item</a> <a class="btn button-hover" href="{% url 'view_item' %}"><i class="fa fa-arrow-left"></i> Back</a> </div></h2>
+    <br>
     <table class="table" >
         <thead>
             <tr>
-                <th style="font-size: larger;">ACTION</th>
-                <th style="font-size: larger;">DATE</th>
-                <th style="font-size: larger;">STAFF</th>
+                <th style="font-size: larger; background-color: #3d4465;color: white;">ACTION</th>
+                <th style="font-size: larger; background-color: #3d4465;color: white;">DATE</th>
+                <th style="font-size: larger; background-color: #3d4465;color: white;">STAFF</th>
             </tr>
         </thead>
         <tbody>

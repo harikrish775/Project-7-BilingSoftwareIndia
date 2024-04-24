@@ -16,86 +16,124 @@
 
 
     <style>
-        #input,select,textarea{
-            box-shadow: 2px 2px 2px gray;
-        }
-        #input:hover{
-            box-shadow: none;
-        }
-        label{
-            color: black;
-        }
-        body{
-            background-color: rgb(130, 144, 199);
-            
-        }
+    #input,select,textarea{
+        box-shadow: 2px 2px 2px gray;
+    }
+    #input:hover{
+        box-shadow: none;
+    }
+    label{
+        color: black;
+    }
+    body{
+        background-color: rgb(130, 144, 199);
         
-       
-            .bs{
-                box-shadow: 2px 2px 10px 3px rgba(0, 0, 0, 0.397);
-            }
+    }
+    
+    
+    .bs{
+        box-shadow: 2px 2px 10px 3px rgba(0, 0, 0, 0.397);
+    }
+
+    .bs_sm{
+        box-shadow: inset 2px 2px 5px 3px rgba(0, 0, 0, 0.199);
+    }
+
+    .tb{
+        color: black;
+    }
+
+    .tg{
+        color: rgb(0, 140, 7);
+    }
+
+    .tr{
+        color: rgb(218, 0, 0);
+    }
+
+    .btn_add{
+        background-color: orange;
+        color: black;
+    }
+
+    .btn_add:hover{
+        background-color: rgb(234, 152, 0);
+        color: black;
+    }
         
-            .bs_sm{
-                box-shadow: inset 2px 2px 5px 3px rgba(0, 0, 0, 0.199);
-            }
+    .bg-pink{
+        background-color: rgb(239, 3, 82)
+    }
+
+    ::-webkit-scrollbar{
+        display: none
+    }
+    @media(min-width:768px){
+        .purchase-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 80px, white 80px, white 100%);
+    }
+    .button-div{
+        margin-left: 8vh;
+    }
+    .body-wrapper{
+        margin-left: 25% ;
+        margin-top:4%;
         
-            .tb{
-                color: black;
-            }
+    }
+    }
+    @media(max-width:768px){
+        .purchase-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 135.5px, white 133.5px, white 100%);
+    }    
+    .button-div{
+        margin-left: 30vh;
+        margin-bottom: 5vh;
         
-            .tg{
-                color: rgb(0, 140, 7);
-            }
+    }
+    .body-wrapper{
+        margin:5% ;
+        margin-top:10%;
         
-            .tr{
-                color: rgb(218, 0, 0);
-            }
-        
-            .btn_add{
-                background-color: orange;
-                color: black;
-            }
-        
-            .btn_add:hover{
-                background-color: rgb(234, 152, 0);
-                color: black;
-            }
-                
-            .bg-pink{
-                background-color: rgb(239, 3, 82)
-            }
-        
-            ::-webkit-scrollbar{
-                display: none
-            }
+    }
+    
+    
+    }
+    .button-hover{
+        background-color: white;
+        color: #3d4465;
+    }
+    .button-hover:hover{
+        background-color:#4d5fbc ;
+        color: white;
+    }
       
         
        
     </style>
     
     <body>
-       <br><br> <br><br><br>     
-<div class="body-wrapper" style="margin-left:25%;">
+       <br><br>    
+<div class="body-wrapper" >
     
     <div class="row p-0 m-0">
-        <div class="col-11  p-0 m-0">
-            <div class=" bg-light bg-light pb-0 mb-0 p-2" style="height:100%;width:100%">
-                <div class="d-flex justify-content-center pt-4">
+        <div class="col-md-11  p-0 m-0">
+            <div class="pb-0 mb-0 p-2" >
+                <div class="">
                     
 
                 <form action="{% url 'update_purchasebill' pbill.id %}" method="post" enctype="multipart/form-data" onsubmit="return validateQuantity()" novalidate>
                     {% csrf_token %}
                     <div class="page-content" >
-                        <div class="card radius-15">
-                            <div class="card-body bg-light">
+                        <div class="card radius-15 ">
+                            <div class="card-body purchase-div">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <h3 class="mb-3">EDIT PURCHASE  BILL</h3> 
+                                        <h3 class="mb-3 text-white my-md-3">EDIT PURCHASE  BILL</h3> 
                                     </div>
-                                    <div class="col-md-7"></div>
-                                    <div class="col-md-1">
-                                        <a href="javascript:window.history.back();" style="text-align: right; font-size: large; color: black; margin-left: 8vh;">
-                                            <i class="fa fa-times mt-3" aria-hidden="true"></i>
+                                    <div class="col-md-6"></div>
+                                    <div class="col-md">
+                                        <a href="javascript:window.history.back();" style="text-align: right; " class="btn button-hover button-div">
+                                            <i class="fa fa-arrow-left"></i> Back
                                         </a>
                                     </div>
                                 </div>
@@ -176,7 +214,7 @@
                                     <br>
 
                                     <div class="row clearfix">
-                                        <div class="col-md-12 table-responsive-md mt-1">
+                                        <div class="col-md-12 table-responsive mt-1">
                                             <table class="table table-bordered table-hover mt-3" id="tab_logic" style="width:100%;">
                                                 <thead style="background-color:rgb(61, 68, 101); color:white; font-weight:bold;">
                                                     <tr >
@@ -257,7 +295,8 @@
                                                 {% endfor %}
                                                 </tbody>
                                                 <tr>
-                                                <td style="border: none; background-color:rgb(61, 68, 101);"><a class="btn ml-1" role="button" id="add" >+</a></td>
+                                                <!-- <td style="border: none; background-color:rgb(61, 68, 101);"><a class="btn ml-1" role="button" id="add" >+</a></td> -->
+                                                <td style="border: none;"><a class="btn  ml-1" role="button" style="background-color:rgb(61, 68, 101);color: white;" id="add" ><span class="fa fa-plus"></span></a></td>
                                                 </tr>
                                             </table>
                                         </div>

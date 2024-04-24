@@ -1,11 +1,11 @@
 <form action="{% url 'ajust_quantity' item.id %}" method="post">
     {% csrf_token %}
-    <div class="modal-header ps-4 pe-4 m-0" style="background-color: rgb(130, 144, 199);">
-        <h1 class="modal-title fs-5" id="exampleModalLabel" style="font-weight: 900;">STOCK ADJUSTMENT</h1>
+    <div class="modal-header ps-4 pe-4 m-0" style="background-color: #3d4465;">
+        <h1 class="modal-title fs-5" id="exampleModalLabel" style="font-weight: 900;color: white;">STOCK ADJUSTMENT</h1>
            
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <div class="modal-body" style="background-color: rgb(130, 144, 199);">
+    <div class="modal-body" >
                     
                   
         <div class="ps-3 pe-3">
@@ -26,9 +26,9 @@
         <hr>
         <div class="row">
             <div class="form-check form-switch d-lg-flex d-sm-none mt-2">
-                <label id="lbl1" class="form-check-label fw-bolder" for="toggleSwitch" style="color: black;">ADD STOCK</label>
-                <input  type="checkbox" role="switch"  id="flexSwitchCheckChecked" name="trans_type" style="margin-top: 4px; margin-left: 5px;">
-                <label id="lbl2" class="form-check-label fw-bolder" for="flexSwitchCheckChecked" style="color: black;">REDUCE STOCK</label>
+                <label id="lbl1" class="form-check-label fw-bolder" for="toggleSwitch" style="color: gray;">ADD STOCK</label>
+                <input  type="checkbox" role="switch"  id="flexSwitchCheckChecked" name="trans_type" style="margin-top: 4px; margin-left: 8px;">
+                <label id="lbl2" class="form-check-label fw-bolder" for="flexSwitchCheckChecked" style="color: gray;">REDUCE STOCK</label>
                 </div>
         </div>
         <div class="row" style="margin-top: 10px;">
@@ -81,11 +81,11 @@
         $('#flexSwitchCheckChecked').on('change load', function () {
         if ($('#flexSwitchCheckChecked').prop('checked')) {
             $('#lbl2').css({ 'color': 'blue' })
-            $('#lbl1').css({ 'color': 'inherit' })
+            $('#lbl1').css({ 'color': 'gray' })
         }
         else {
             $('#lbl1').css({ 'color': 'blue' })
-            $('#lbl2').css({ 'color': 'inherit' })
+            $('#lbl2').css({ 'color': 'gray' })
         }
         })
     })
