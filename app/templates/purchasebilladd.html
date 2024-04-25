@@ -445,7 +445,7 @@
 
                                         </div>
                                         <div class="col-md-3">
-                                            <input style="color: black;" class="form-control border-dark" type="number" placeholder="ITEM HSN" id="hsn" name="hsn" onchange="checkhsn(this)" required>
+                                            <input style="color: black;" class="form-control border-dark" type="number" placeholder="ITEM HSN" id="hsn" name="hsn" onchange="hsncheck(this.value)" oninput="hsncheck(this.value)" required>
                                             <div class="text-danger m-2" id="warnhsn"></div>
                                         </div>
                                         <div class="col-md-3 d-flex">
@@ -1813,6 +1813,31 @@ $(document).ready(function () {
             alert('Please provide a valid HSN Number');
         }
     }
+
+    // hsn check
+    function hsncheck(hsn){
+              
+              $.ajax({
+                  type: 'POST',
+                  url: "{% url 'create_item_valid_ajax' %}",
+                  headers: {
+                      "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+                  },
+                  data: { 'item_hsn': hsn},
+                  success: function(response) {
+                    if (response.success) {
+                      $('#warnhsn').text('').removeClass('error').addClass('success');
+                  } else {
+                      $('#warnhsn').text(response.error).removeClass('success').addClass('error');
+                  }
+                  },
+                  error: function(xhr, status, error) {
+                      // Handle error
+                      console.error(xhr.responseText);
+                  }
+              });
+          
+      }
 
     function checkgst(element) {
         var gstinput = element.value;
