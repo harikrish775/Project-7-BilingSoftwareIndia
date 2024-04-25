@@ -422,7 +422,7 @@ def view_item(request):
   #         i.done_by_name = None
 
   context={
-    'staff':staff,
+    'staff':staff, 
     'cmp':cmp,
     'allitem':allitem,
   }
@@ -3930,14 +3930,17 @@ def party_details_first(request):
     staff = staff_details.objects.get(id=sid)
     cmp = company.objects.get(id=staff.company.id)
     user = cmp.id
-    pp = Parties.objects.filter(company_id=user).order_by('party_name').first()
-    party = Parties.objects.filter(id=pp.id).order_by('date')
-    parties = Parties.objects.filter(company_id=user).values('party_name','phone_number','id').annotate(total_amount=Sum('opening_balance')).distinct().order_by('party_name')
-    details =  Parties.objects.get(id=pp.id) 
-    transactions = Parties.objects.all()
-    for index, part in enumerate(party, start=1):
-        part.index = index
-    return render(request,'parties_details.html',{'party':party, 'details':details,'cmp':cmp,'staff':staff,'parties':parties})
+    count = Parties.objects.filter(company_id=cmp.id).count()
+    if count > 0:
+      pp = Parties.objects.filter(company_id=user).order_by('party_name').first()
+      party = Parties.objects.filter(id=pp.id).order_by('date')
+      parties = Parties.objects.filter(company_id=user).values('party_name','phone_number').annotate(total_amount=Sum('opening_balance')).distinct().order_by('party_name')
+      details =  Parties.objects.get(id=pp.id) 
+      for index, part in enumerate(party, start=1):
+          part.index = index
+      return render(request,'parties_details.html',{'party':party, 'details':details,'cmp':cmp,'staff':staff,'parties':parties})
+    else:
+        return render(request,'parties_default.html',{'cmp':cmp,'staff':staff})
 
 def parties_table(request):
     sid = request.session.get('staff_id')
@@ -4024,10 +4027,13 @@ def party_delete(request,pk):
     staff = staff_details.objects.get(id=sid)
     cmp = company.objects.get(id=staff.company.id)
     user = cmp.id
-    party = Parties.objects.filter(phone_number=pk,company_id=user).first()
-    deleteparty = Parties.objects.filter(phone_number=party.phone_number,party_name=party.party_name)
+    deleteparty = Parties.objects.filter(phone_number=pk,company_id=user)
     deleteparty.delete()
-    return redirect('party_details_first')
+    count = Parties.objects.filter(company_id=cmp.id).count()
+    if count > 0:
+      return redirect('party_details_first')
+    else:
+      return render(request,'parties_default.html',{'cmp':cmp,'staff':staff})
 
 
 def party_edit(request,pk,id):
@@ -4037,7 +4043,6 @@ def party_edit(request,pk,id):
     user = cmp.id
     party = get_object_or_404(Parties, phone_number=pk,party_name=id,company_id=user)
     return render(request,'parties_edit.html',{ 'partyy':party ,'cmp':cmp,'staff':staff})
-
 
 
 def party_update(request,pk):
@@ -4117,9 +4122,9 @@ def party_details(request,pk,id):
    cmp = company.objects.get(id=staff.company.id)
    user = cmp.id
    party = Parties.objects.filter(phone_number=pk,party_name=id,company_id=user).order_by('date')
-   parties = Parties.objects.filter(company_id=user).values('party_name','phone_number','id').annotate(total_amount=Sum('opening_balance')).distinct().order_by('party_name')
+   parties = Parties.objects.filter(company_id=user).values('party_name','phone_number').annotate(total_amount=Sum('opening_balance')).distinct().order_by('party_name')
    details =  Parties.objects.get(phone_number=pk,party_name=id,company_id=user) 
-   transactions = Parties.objects.all()
+   
    for index, part in enumerate(party, start=1):
       part.index = index
    return render(request,'parties_details.html',{'party':party, 'details':details,'cmp':cmp,'staff':staff,'parties':parties})
@@ -4186,112 +4191,6 @@ def party_edit_validation_ajax(request,pk):
            
         else:
           return JsonResponse({'success':True})
-
-def create_item_valid_ajax(request):
-    if request.method == 'POST':
-        sid = request.session.get('staff_id')
-        staff = staff_details.objects.get(id=sid)
-        cmp = company.objects.get(id=staff.company.id)
-
-        item_name = request.POST.get('item_name')
-        item_hsn = request.POST.get('item_hsn')
-
-        if ItemModel.objects.filter(item_name=item_name, company=cmp).exists():
-          return JsonResponse({'error': 'Item Name already exists. Please choose a different Name.'})
-        elif ItemModel.objects.filter(item_hsn=item_hsn, company=cmp).exists():
-          return JsonResponse({'error': 'Item HSN already exists. Please choose a different HSN.'})
-        if item_hsn:
-          if len(item_hsn) < 6:
-              return JsonResponse({'error': 'Item HSN must be 6 digits or more.'})
-
-        return JsonResponse({'success': True})
-    
-
-def edit_item_valid_ajax(request,pk):
-    if request.method == 'POST':
-        sid = request.session.get('staff_id')
-        staff = staff_details.objects.get(id=sid)
-        cmp = company.objects.get(id=staff.company.id)
-
-        item_name = request.POST.get('item_name')
-        item_hsn = request.POST.get('item_hsn')
-
-        if ItemModel.objects.filter(item_name=item_name, company=cmp).exclude(id=pk).exists():
-          return JsonResponse({'error': 'Item Name already exists. Please choose a different Name.'})
-        elif ItemModel.objects.filter(item_hsn=item_hsn, company=cmp).exclude(id=pk).exists():
-          return JsonResponse({'error': 'Item HSN already exists. Please choose a different HSN.'})
-        if item_hsn:
-          if len(item_hsn) < 6:
-              return JsonResponse({'error': 'Item HSN must be 6 digits or more.'})
-
-        return JsonResponse({'success': True})
-
-def item_create_new(request):
-    if request.method == 'POST':
-        sid = request.session.get('staff_id')
-        staff = staff_details.objects.get(id=sid)
-        cmp = company.objects.get(id=staff.company.id)
-
-        item_name = request.POST.get('item_name')
-        item_hsn = request.POST.get('item_hsn')
-
-        if ItemModel.objects.filter(item_name=item_name, company=cmp).exists() or \
-                ItemModel.objects.filter(item_hsn=item_hsn, company=cmp).exists():
-            messages.error(request, 'Item Name or HSN already exists. Please choose a different Name or HSN.')
-            return render(request, 'add_item.html')
-        if len(item_hsn) < 6:
-            messages.error(request, 'Item HSN must be 6 digits or more.')
-            return render(request, 'add_item.html')
-
-        item_unit = request.POST.get('item_unit')
-        item_type = request.POST.get('type')
-        item_taxable = request.POST.get('item_taxable')
-        item_gst = request.POST.get('item_gst')
-        item_igst = request.POST.get('item_igst')
-        item_sale_price = request.POST.get('saleprice')
-        item_purchase_price = request.POST.get('purprice')
-        item_opening_stock = request.POST.get('item_opening_stock')
-        item_current_stock = item_opening_stock
-        if item_opening_stock == '' or None:
-            item_opening_stock = 0
-            item_current_stock = 0
-        item_at_price = request.POST.get('item_at_price')
-        if item_at_price == '' or None:
-            item_at_price = 0
-        item_date = request.POST.get('itmdate')
-
-        item_data = ItemModel(user=staff.company.user,
-                              company=cmp,
-                              staff=staff,
-                              item_name=item_name,
-                              item_hsn=item_hsn,
-                              item_unit=item_unit,
-                              item_type=item_type,
-                              item_taxable=item_taxable,
-                              item_gst=item_gst,
-                              item_igst=item_igst,
-                              item_sale_price=item_sale_price,
-                              item_purchase_price=item_purchase_price,
-                              item_stock_in_hand=item_opening_stock,
-                              item_current_stock=item_current_stock,
-                              item_at_price=item_at_price,
-                              item_date=item_date)
-        item_data.save()
-
-        tr_history = ItemTransactionHistory(company=cmp,
-                                            staff=staff,
-                                            item=item_data,
-                                            action="CREATED",
-                                            done_by_name=staff.first_name,)
-        tr_history.save()
-
-        if request.POST.get('clickedButtonValue') == 'save_and_next':
-            return redirect('add_item')
-        else:
-            return redirect('view_item')
-
-    return render(request, 'add_item.html')
-
 
 def party_save_emailcheck_ajax(request):
     
@@ -4457,6 +4356,109 @@ def party_edit_gstcheck_ajax(request,pk):
           else:
               return JsonResponse({'success': False, 'message': 'Invalid GSTIN format!'})
         
+def create_item_valid_ajax(request):
+    if request.method == 'POST':
+        sid = request.session.get('staff_id')
+        staff = staff_details.objects.get(id=sid)
+        cmp = company.objects.get(id=staff.company.id)
+
+        item_name = request.POST.get('item_name')
+        item_hsn = request.POST.get('item_hsn')
+
+        if ItemModel.objects.filter(item_name=item_name, company=cmp).exists():
+          return JsonResponse({'error': 'Item Name already exists. Please choose a different Name.'})
+        elif ItemModel.objects.filter(item_hsn=item_hsn, company=cmp).exists():
+          return JsonResponse({'error': 'Item HSN already exists. Please choose a different HSN.'})
+        if item_hsn:
+          if len(item_hsn) < 6:
+              return JsonResponse({'error': 'Item HSN must be 6 digits or more.'})
+
+        return JsonResponse({'success': True})
+
+def edit_item_valid_ajax(request,pk):
+    if request.method == 'POST':
+        sid = request.session.get('staff_id')
+        staff = staff_details.objects.get(id=sid)
+        cmp = company.objects.get(id=staff.company.id)
+
+        item_name = request.POST.get('item_name')
+        item_hsn = request.POST.get('item_hsn')
+
+        if ItemModel.objects.filter(item_name=item_name, company=cmp).exclude(id=pk).exists():
+          return JsonResponse({'error': 'Item Name already exists. Please choose a different Name.'})
+        elif ItemModel.objects.filter(item_hsn=item_hsn, company=cmp).exclude(id=pk).exists():
+          return JsonResponse({'error': 'Item HSN already exists. Please choose a different HSN.'})
+        if item_hsn:
+          if len(item_hsn) < 6:
+              return JsonResponse({'error': 'Item HSN must be 6 digits or more.'})
+
+        return JsonResponse({'success': True})
 
 
 # end ----------------
+
+def item_create_new(request):
+    if request.method == 'POST':
+        sid = request.session.get('staff_id')
+        staff = staff_details.objects.get(id=sid)
+        cmp = company.objects.get(id=staff.company.id)
+
+        item_name = request.POST.get('item_name')
+        item_hsn = request.POST.get('item_hsn')
+
+        if ItemModel.objects.filter(item_name=item_name, company=cmp).exists() or \
+                ItemModel.objects.filter(item_hsn=item_hsn, company=cmp).exists():
+            messages.error(request, 'Item Name or HSN already exists. Please choose a different Name or HSN.')
+            return render(request, 'add_item.html')
+        if len(item_hsn) < 6:
+            messages.error(request, 'Item HSN must be 6 digits or more.')
+            return render(request, 'add_item.html')
+
+        item_unit = request.POST.get('item_unit')
+        item_type = request.POST.get('type')
+        item_taxable = request.POST.get('item_taxable')
+        item_gst = request.POST.get('item_gst')
+        item_igst = request.POST.get('item_igst')
+        item_sale_price = request.POST.get('saleprice')
+        item_purchase_price = request.POST.get('purprice')
+        item_opening_stock = request.POST.get('item_opening_stock')
+        item_current_stock = item_opening_stock
+        if item_opening_stock == '' or None:
+            item_opening_stock = 0
+            item_current_stock = 0
+        item_at_price = request.POST.get('item_at_price')
+        if item_at_price == '' or None:
+            item_at_price = 0
+        item_date = request.POST.get('itmdate')
+
+        item_data = ItemModel(user=staff.company.user,
+                              company=cmp,
+                              staff=staff,
+                              item_name=item_name,
+                              item_hsn=item_hsn,
+                              item_unit=item_unit,
+                              item_type=item_type,
+                              item_taxable=item_taxable,
+                              item_gst=item_gst,
+                              item_igst=item_igst,
+                              item_sale_price=item_sale_price,
+                              item_purchase_price=item_purchase_price,
+                              item_stock_in_hand=item_opening_stock,
+                              item_current_stock=item_current_stock,
+                              item_at_price=item_at_price,
+                              item_date=item_date)
+        item_data.save()
+
+        tr_history = ItemTransactionHistory(company=cmp,
+                                            staff=staff,
+                                            item=item_data,
+                                            action="CREATED",
+                                            done_by_name=staff.first_name,)
+        tr_history.save()
+
+        if request.POST.get('clickedButtonValue') == 'save_and_next':
+            return redirect('add_item')
+        else:
+            return redirect('view_item')
+
+    return render(request, 'add_item.html')

@@ -87,13 +87,9 @@ urlpatterns = [
     path('party_update/<int:pk>',views.party_update,name='party_update'),
     path('parties_history/<int:pk>/<str:id>',views.parties_history,name="parties_history"),
     path('party_details/<int:pk>/<str:id>',views.party_details,name="party_details"),
-
     path('party_details_first',views.party_details_first,name="party_details_first"),
     path('party_save_validation_ajax',views.party_save_validation_ajax,name="party_save_validation_ajax"),
     path('party_edit_validation_ajax/<int:pk>',views.party_edit_validation_ajax,name="party_edit_validation_ajax"),
-
-    path('create_item_valid_ajax',views.create_item_valid_ajax,name="create_item_valid_ajax"),
-    path('edit_item_valid_ajax/<int:pk>',views.edit_item_valid_ajax,name="edit_item_valid_ajax"),
     path('party_save_emailcheck_ajax',views.party_save_emailcheck_ajax,name="party_save_emailcheck_ajax"),
     path('party_save_phonecheck_ajax',views.party_save_phonecheck_ajax,name="party_save_phonecheck_ajax"),
     path('party_save_namecheck_ajax',views.party_save_namecheck_ajax,name="party_save_namecheck_ajax"),
@@ -102,6 +98,11 @@ urlpatterns = [
     path('party_edit_phonecheck_ajax/<int:pk>',views.party_edit_phonecheck_ajax,name="party_edit_phonecheck_ajax"),
     path('party_edit_gstcheck_ajax/<int:pk>',views.party_edit_gstcheck_ajax,name="party_edit_gstcheck_ajax"),
     path('party_edit_emailcheck_ajax/<int:pk>',views.party_edit_emailcheck_ajax,name="party_edit_emailcheck_ajax"),
+
+    path('create_item_valid_ajax',views.create_item_valid_ajax,name="create_item_valid_ajax"),
+    path('edit_item_valid_ajax/<int:pk>',views.edit_item_valid_ajax,name="edit_item_valid_ajax"),
+    
+
     # path('aaa',views.aaa,name="aaa"),
     # path('aaa',views.aaa,name="aaa"),
     # path('aaa',views.aaa,name="aaa"),
