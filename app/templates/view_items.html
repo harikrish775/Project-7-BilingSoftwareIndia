@@ -225,7 +225,7 @@
                                             <a style="color: blue; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#myModal2" class=" fa fa-edit  tb hide_table_text_v" 
                                             hx-get="{% url 'edititemmodaladjust' first_item.id i.id %}"
                                             hx-trigger="click delay:0s"
-                                            hx-target="#item_transaction_view_or_edit_target"><small> Edit</small></a>                                 
+                                            hx-target="#item_transaction_view_or_edit_target"><small> Edit</small></a>                                  
                                             <a title="Delete Profile" style="color: red; " id="delete" class="fa fa-trash" href="{% url 'transaction_delete'  i.pk %}" ><small>Delete</small> </a>
 
                                         
@@ -246,7 +246,7 @@
                                        <td class="text-center">{{ first_item.done_by_name }}</td> {% endcomment %}
                                        <td class="text-center pdf-hidden">
                                         
-                                               <a title="Edit Profile" style="color: blue;" id="editt" class="fa fa-edit" href="{% url 'edit_item' first_item.pk  %}" ><small>Edit <i class="fa fa-pen-to-square"></i></small> </a>
+                                               <a title="Edit Profile" style="color: blue;" id="editt" class="fa fa-edit" href="{% url 'edit_item' first_item.pk  %}" ><small>Edit </small> </a>
                                                <a title="Delete Profile" style="color: red; " id="delete" class="fa fa-trash" href="{% url 'item_delete_openstock' first_item.pk %}" ><small>Delete</small> </a>
 
                                        </td>

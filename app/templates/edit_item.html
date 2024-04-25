@@ -112,6 +112,13 @@
         background-color:#4d5fbc ;
         color: white;
     }
+    .success {
+          color: green;
+      }
+
+      .error {
+          color: red;
+      }
   </style>
   
   <div class="content-body" >
@@ -120,12 +127,12 @@
     <div class="row p-0 m-0" >
       <div class="col-12  p-0 m-0">
 <div class="pb-0 mb-0 p-2" style="height:100%;width:100%; background-color: #8290c7;">           
-          <form action="{% url 'update_item' item.pk %}" method="post" >
+          <form action="{% url 'update_item' item.pk %}" method="post" id="itemForm" >
             {% csrf_token %}
                     
                     <div class="p-4 rounded mb-5 item-div" >
                          <div class="d-md-flex d-sm-block">
-                          <h5 class="mt-3"><strong class="fw-bolder text-white fs-3">ADD ITEM</strong></h5>
+                          <h5 class="mt-3"><strong class="fw-bolder text-white fs-3">EDIT ITEM</strong></h5>
                           <div style="text-align: right;" class="col"><a class="btn button-hover" href="{% url 'view_item' %}"><i class="fa fa-arrow-left"></i> Back</a></div> 
                         </div> 
                       <br>
@@ -159,12 +166,14 @@
 
                             <div class="col-md-3">
                                 <label class="col-form-label" style="color: black;">ITEM NAME</label>
-                                <input style="color: black;" class="form-control border-dark fw-bolder" type="text" placeholder="ITEM NAME" autocomplete="off" name="item_name" value="{{item.item_name}}" required>
+                                <input style="color: black;" onchange="namecheck(this.value)" oninput="namecheck(this.value)" class="form-control border-dark fw-bolder" type="text" placeholder="ITEM NAME" autocomplete="off" name="item_name" value="{{item.item_name}}" required>
+                                <label class="ml-2" id="namemsg"></label>
                             </div>
 
                             <div class="col-md-3">
                                 <label id="itemLabel" class="col-form-label" style="color: black;">ITEM HSN</label>
-                                <input id="itemInput" style="color: black;" class="form-control border-dark ms-2 fw-bolder" type="number" placeholder="ITEM HSN" name="item_hsn" value="{{item.item_hsn}}" required>
+                                <input id="itemInput" style="color:  black;" onchange="hsncheck(this.value)" oninput="hsncheck(this.value)" class="form-control border-dark ms-2 fw-bolder" type="number" placeholder="ITEM HSN" name="item_hsn" value="{{item.item_hsn}}" required>
+                                <label class="ml-2" id="hsnmsg"></label>
                             </div>
 
                             <div class="col-md-3">
@@ -276,6 +285,88 @@
                       </div>
                       
           </form>
+          <script>
+            $(document).ready(function() {
+                $('#itemForm').submit(function(event) {
+                    // Prevent default form submission behavior
+                    event.preventDefault();
+
+                    // AJAX request
+                    $.ajax({
+                        type: 'POST',
+                        url: "{% url 'edit_item_valid_ajax' item.id %}",
+                        headers: {
+                            "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+                        },
+                        data: $('#itemForm').serialize(),
+                        success: function(response) {
+                            if (response.success) {
+                                $('#itemForm').unbind('submit').submit(); // Submit the form if validation succeeds
+                            } else {
+                                alert(response.error); // Alert the error message if validation fails
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // Handle error
+                            console.error(xhr.responseText);
+                        }
+                    });
+                });
+            });
+
+
+            // hsn check
+            function hsncheck(hsn){
+              
+              $.ajax({
+                  type: 'POST',
+                  url: "{% url 'edit_item_valid_ajax' item.id %}",
+                  headers: {
+                      "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+                  },
+                  data: { 'item_hsn': hsn},
+                  success: function(response) {
+                    if (response.success) {
+                      $('#hsnmsg').text('Valid').removeClass('error').addClass('success');
+                  } else {
+                      $('#hsnmsg').text(response.error).removeClass('success').addClass('error');
+                  }
+                  },
+                  error: function(xhr, status, error) {
+                      // Handle error
+                      console.error(xhr.responseText);
+                  }
+              });
+          
+      }
+
+      // name check
+      function namecheck(name){
+        
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'edit_item_valid_ajax' item.id %}",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+            },
+            data: { 'item_name': name},
+            success: function(response) {
+              if (response.success) {
+                $('#namemsg').text('Valid').removeClass('error').addClass('success');
+            } else {
+                $('#namemsg').text(response.error).removeClass('success').addClass('error');
+            }
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                console.error(xhr.responseText);
+            }
+        });
+    
+}
+
+
+        </script>
   
  <!-- modal start -->
  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

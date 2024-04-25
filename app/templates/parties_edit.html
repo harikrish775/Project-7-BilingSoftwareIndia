@@ -42,6 +42,13 @@
         background: linear-gradient(#3d4465 0%, #3d4465 155px, white 17px, white 100%);
     }
     }
+    .success {
+          color: green;
+      }
+
+      .error {
+          color: red;
+      }
 </style>
 
 
@@ -63,16 +70,8 @@
         {% endfor %}
 
         <div class="form-group row">
-            <div class="col-md"><label for="">Party Name</label><input id="input" type="text" value="{{partyy.party_name}}" name="partyname" class="form-control" placeholder="Party Name" required></div>
-            <div class="col-md"><label for="">Phone Number</label><input id="input" type="text" value="{{partyy.phone_number}}" name="mobilenumber" class="form-control" pattern="[0-9]{10}" placeholder="Phone Number" required></div>
-            <div class="col-md"><label for="">GSTIN</label><input id="gstinInput" type="text" value="{{partyy.gstin}}" name="gstin" class="form-control" placeholder="GSTIN" id="gstinInput" pattern="[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9]{1}Z[0-9]{1}" required> <small>#27ABCDE1234F1Z5</small></div>
-            
-        </div>
-
-        
-
-        <div class="row form-group">
-
+            <div class="col-md"><label for="">Party Name</label><input id="input" type="text" value="{{partyy.party_name}}" name="partyname" class="form-control" placeholder="Party Name" oninput="nameCheck(this.value)" onchange="nameCheck(this.value)" required><label class="ml-2 mt-1" id="namemsg"></label></div>
+            <div class="col-md"><label for="">Phone Number</label><input id="input" type="text" value="{{partyy.phone_number}}" name="mobilenumber" class="form-control" pattern="[0-9]{10}" placeholder="Phone Number" oninput="phoneCheck(this.value)" onchange="phoneCheck(this.value)" required><label class="ml-2 mt-1" id="phonemsg"></label></div>
             <div class="col-md">
                 <label for="">GST Type</label>
                     <select name="gstintype" id="gstintype" class="form-control" onchange="toggleGSTIN()" required>
@@ -82,6 +81,13 @@
                         <option value="Registered Buisness - Composition">Registered Buisness - Composition</option>
                     </select>
             </div>
+        </div>
+
+        
+
+        <div class="row form-group">
+            <div class="col-md" id="gstinInputDiv"><label for="">GSTIN</label><input id="gstinInput" type="text" value="{{partyy.gstin}}" name="gstin" class="form-control" placeholder="GSTIN" id="gstinInput" style="text-transform: uppercase;" pattern="[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9]{1}Z[0-9]{1}" oninput="gstCheck(this.value)" onchange="gstCheck(this.value)" required> <small>#27ABCDE1234F1Z5</small> <label class="ml-2 mt-1" id="gstmsg"></label></div>
+            
             <script>
                 function goBack() {
                     window.history.back();
@@ -95,13 +101,16 @@
                 function toggleGSTIN() {
                     var gstTypeSelect = document.getElementById("gstintype");
                     var gstinInput = document.getElementById("gstinInput");
+                    var gstinDiv = document.getElementById("gstinInputDiv");
 
                     if (gstTypeSelect.value === "Unregistered/Consumers") {
                         gstinInput.removeAttribute("required");
-                        gstinInput.disabled = true;
+                        // gstinInput.disabled = true;
+                        gstinDiv.style.display = 'none';
                     } else {
                         gstinInput.setAttribute("required", "");
-                        gstinInput.disabled = false;
+                        // gstinInput.disabled = false;
+                        gstinDiv.style.display = '';
                     }
                 }
             </script>
@@ -143,7 +152,7 @@
                     </select>
             </div>
 
-            <div class="col-md"><label for="">Email</label><input id="input" type="email" value="{{partyy.email}}" name="email" class="form-control" placeholder="Email" ></div>
+            <div class="col-md"><label for="">Email</label><input id="input" type="email" value="{{partyy.email}}" name="email" class="form-control" placeholder="Email" oninput="emailCheck(this.value)" onchange="emailCheck(this.value)" ><label class="ml-2" id="emailmsg"></label></div>
             <div class="col-md"><label for="">Date</label><input id="input" type="date" value="{{ partyy.date|date:'Y-m-d' }}" name="date" class="form-control" ></div>
  
         </div><br>
@@ -223,6 +232,110 @@
                 });
             });
 
+            // name check
+            function nameCheck(valuee) {
+                            $.ajax({
+                                type: "POST",
+                                url: "{% url 'party_edit_namecheck_ajax' partyy.id %}", // Replace with the actual URL
+                                headers: {
+                                        "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+                                    },
+                                data: {'partyname':valuee},
+                                dataType: 'json',
+                                success: function(response) {
+                                    if (response.success) {
+                                        $('#namemsg').text('Valid').removeClass('error').addClass('success');
+                                    } else {
+                                        $('#namemsg').text(response.message).removeClass('success').addClass('error');
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    // Error handling
+                                    console.error(xhr.responseText);
+                                }
+                            });
+                        };
+
+
+
+            // phonr no check
+            function phoneCheck(valuee) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'party_edit_phonecheck_ajax' partyy.id %}", // Replace with the actual URL
+                        headers: {
+                                "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+                            },
+                        data: {'mobilenumber':valuee},
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                $('#phonemsg').text('Valid').removeClass('error').addClass('success');
+                            } else {
+                                $('#phonemsg').text(response.message).removeClass('success').addClass('error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // Error handling
+                            console.error(xhr.responseText);
+                        }
+                    });
+                };
+
+
+
+            // gst num check
+            function gstCheck(valuee) {
+                var gsttype = document.getElementById('gstintype').value;
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'party_edit_gstcheck_ajax' partyy.id %}", // Replace with the actual URL
+                        headers: {
+                                "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+                            },
+                        data: {
+                            'gstin':valuee,
+                            'gstintype':gsttype
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                $('#gstmsg').text('Valid').removeClass('error').addClass('success');
+                            } else {
+                                $('#gstmsg').text(response.message).removeClass('success').addClass('error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // Error handling
+                            console.error(xhr.responseText);
+                        }
+                    });
+                };
+
+
+            // email check
+            function emailCheck(email) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'party_edit_emailcheck_ajax' partyy.id %}", // Replace with the actual URL
+                        headers: {
+                                "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+                            },
+                        data: {'email':email},
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                $('#emailmsg').text('Valid').removeClass('error').addClass('success');
+                            } else {
+                                $('#emailmsg').text(response.message).removeClass('success').addClass('error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // Error handling
+                            console.error(xhr.responseText);
+                        }
+                    });
+                };
 
 
 

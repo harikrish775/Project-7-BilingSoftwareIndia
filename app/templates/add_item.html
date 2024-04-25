@@ -113,6 +113,15 @@
         background-color:#4d5fbc ;
         color: white;
     }
+
+    .success {
+          color: green;
+      }
+
+      .error {
+          color: red;
+      }
+
   </style>
   
   <div class="content-body">
@@ -168,12 +177,14 @@
 
                             <div class="col-md-3">
                                 <label class="col-form-label" style="color: black;">ITEM NAME</label>
-                                <input style="color: black;" class="form-control border-dark fw-bolder" type="text" placeholder="ITEM NAME" autocomplete="off" name="item_name" id="item_name" required>
+                                <input style="color: black;" onchange="namecheck(this.value)" oninput="namecheck(this.value)" class="form-control border-dark fw-bolder" type="text" placeholder="ITEM NAME" autocomplete="off" name="item_name" id="item_name" required>
+                                <label class="ml-2" id="namemsg"></label>
                             </div>
 
                             <div class="col-md-3">
                                 <label id="itemLabel" class="col-form-label" style="color: black;">ITEM HSN</label>
-                                <input id="itemInput" style="color: black;" class="form-control border-dark ms-2 fw-bolder" type="number" placeholder="ITEM HSN" name="item_hsn" id="item_hsn" required>
+                                <input id="itemInput" style="color: black;" onchange="hsncheck(this.value)" oninput="hsncheck(this.value)" class="form-control border-dark ms-2 fw-bolder" type="number" placeholder="ITEM HSN" name="item_hsn" id="item_hsn" required>
+                                <label class="ml-2" id="hsnmsg"></label>
                             </div>
 
                             <div class="col-md-3">
@@ -321,7 +332,55 @@
                 });
             });
 
+            // hsn check
+            function hsncheck(hsn){
+              
+                    $.ajax({
+                        type: 'POST',
+                        url: "{% url 'create_item_valid_ajax' %}",
+                        headers: {
+                            "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+                        },
+                        data: { 'item_hsn': hsn},
+                        success: function(response) {
+                          if (response.success) {
+                            $('#hsnmsg').text('Valid').removeClass('error').addClass('success');
+                        } else {
+                            $('#hsnmsg').text(response.error).removeClass('success').addClass('error');
+                        }
+                        },
+                        error: function(xhr, status, error) {
+                            // Handle error
+                            console.error(xhr.responseText);
+                        }
+                    });
+                
+            }
 
+            // name check
+            function namecheck(name){
+              
+              $.ajax({
+                  type: 'POST',
+                  url: "{% url 'create_item_valid_ajax' %}",
+                  headers: {
+                      "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+                  },
+                  data: { 'item_name': name},
+                  success: function(response) {
+                    if (response.success) {
+                      $('#namemsg').text('Valid').removeClass('error').addClass('success');
+                  } else {
+                      $('#namemsg').text(response.error).removeClass('success').addClass('error');
+                  }
+                  },
+                  error: function(xhr, status, error) {
+                      // Handle error
+                      console.error(xhr.responseText);
+                  }
+              });
+          
+      }
         </script>
   
           <!-- modal start -->
