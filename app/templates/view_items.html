@@ -134,12 +134,12 @@
             <div class="col-11 item-div" style="background-color: white ;padding: 20px;border-radius: 8px; margin-left: 2vw;" >
                 <div class="row">
                     <div class="col-md-8">
-                        <p class="tb fw-bolder fs-5 text-white" style="color: black;">{{ first_item.item_name|upper }} <span class="fa fa-share ps-1 tb"></span></p>
+                        <p class="tb fw-bolder fs-5 text-white ml-md-3" style="color: black;">{{ first_item.item_name|upper }} <span class="fa fa-share ps-1 tb"></span></p>
                     <h3 id="namee" style="text-transform: uppercase;font-size: 25px;" ></h3></div>
                  
                       
 
-                     <div style="text-align: right;" class="col-md-4 ">
+                     <div style="text-align: right;" class="col-md mr-md-3">
                         <button style="height: 40px;" class=" btn button-hover mb-2" data-bs-toggle="modal" data-bs-target="#myModal1" data-bs-whatever="@getbootstrap"
                         hx-get="{% url 'itemmodaladjust' first_item.id %}"
                         hx-trigger="click delay:0s"
@@ -151,7 +151,7 @@
                     </div><br>
                      
             <div class="row" id="thirdTable" style="color: black;">
-                <div class="col-md">
+                <div class="col-md ml-md-3">
                     <div class="">
                         <p class="tb fw-bolder fs-5">SALE PRICE  <span class="ps-2 tg">: ₹{{ first_item.item_sale_price }}</span></p>
                         <p class="tb fw-bolder fs-5">STOCK QUANTITY  <span class="ps-2 tg">: {{ first_item.item_current_stock }}</span></p>
