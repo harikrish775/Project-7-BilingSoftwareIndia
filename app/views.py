@@ -3934,11 +3934,19 @@ def party_details_first(request):
     if count > 0:
       pp = Parties.objects.filter(company_id=user).order_by('party_name').first()
       party = Parties.objects.filter(id=pp.id).order_by('date')
-      parties = Parties.objects.filter(company_id=user).values('party_name','phone_number').annotate(total_amount=Sum('opening_balance')).distinct().order_by('party_name')
+      parties = Parties.objects.filter(company_id=user).values('party_name','phone_number','to_recieve','to_pay','id').annotate(total_amount=Sum('opening_balance')).distinct().order_by('party_name')
       details =  Parties.objects.get(id=pp.id) 
-      for index, part in enumerate(party, start=1):
-          part.index = index
-      return render(request,'parties_details.html',{'party':party, 'details':details,'cmp':cmp,'staff':staff,'parties':parties})
+      cnote = Creditnote.objects.filter(company_id=user,party_id=pp.id)
+      invoice = SalesInvoice.objects.filter(company_id=user,party_id=pp.id)
+      pbill = PurchaseBill.objects.filter(company_id=user,party_id=pp.id)
+      pdebit = purchasedebit.objects.filter(company_id=user,party_id=pp.id)
+      
+      
+      context={'party':party, 'details':details,
+               'cmp':cmp,'staff':staff,'parties':parties,
+               'cnote':cnote,'invoice':invoice,'pbill':pbill,'pdebit':pdebit,
+               }
+      return render(request,'parties_details.html',context)
     else:
         return render(request,'parties_default.html',{'cmp':cmp,'staff':staff})
 
@@ -3954,73 +3962,124 @@ def parties_table(request):
           transaction.index = index
         parties = Parties.objects.filter(company_id=comp).values('party_name','phone_number').annotate(total_amount=Sum('opening_balance')).distinct().order_by('party_name')
         
-        return render(request,'parties_table.html',{'parties':parties,'transactions':transactions,'cmp':cmp,'staff':staff})
+        return redirect('party_details_first')
     else:
         return render(request,'parties_default.html',{'cmp':cmp,'staff':staff})
     
 
     
-def party_save(request):
+# def party_save(request):
     
+#     sid = request.session.get('staff_id')
+#     staff = staff_details.objects.get(id=sid)
+#     cmp = company.objects.get(id=staff.company.id)
+#     user = cmp.id
+    
+#     if request.method == 'POST':
+#         partyname = request.POST['partyname'].capitalize()
+#         mobilenumber = request.POST['mobilenumber']
+#         gstin = '' if request.POST['gstintype'] == 'Unregistered/Consumers' else request.POST['gstin']
+#         gstintype = request.POST['gstintype']
+#         state = request.POST['state']
+#         email = request.POST['email']
+#         Date = request.POST['date']
+#         address = request.POST['address']
+#         balance = request.POST['balance']
+#         buttonn = request.POST['buttonn']
+#         capGST = gstin.upper()
+        
+#         if balance == '' or balance == '0' :
+               
+#             party = Parties(party_name = partyname,phone_number = mobilenumber, gstin = capGST,
+#                             gst_type = gstintype, billing_address = address, state = state,
+#                             email = email, date = Date,company_id=user,staff_id=staff.id)
+#             party.save()
+#             history = History(company_id=user,party_id=party.id,staff_id=staff.id,action='CREATED')
+#             history.save()
+            
+#         else:
+#             if request.POST['pay_recieve'] != '':
+#                 pay_recieve = request.POST['pay_recieve']
+#                 if pay_recieve == 'receive':
+#                     party = Parties(party_name = partyname,phone_number = mobilenumber, gstin = capGST,
+#                                     gst_type = gstintype, billing_address = address, state = state,
+#                                     email = email, date = Date,opening_balance = balance,to_recieve = True,
+#                                     company_id=user,staff_id=staff.id)
+#                     party.save()
+#                     history = History(company_id=user,party_id=party.id,staff_id=staff.id,action='CREATED')
+#                     history.save()
+#                 elif pay_recieve == 'pay':
+#                     neg_balance = -int(balance)
+#                     party = Parties(party_name = partyname,phone_number = mobilenumber, gstin = capGST,
+#                                     gst_type = gstintype, billing_address = address, state = state,
+#                                     email = email, date = Date,opening_balance = neg_balance,to_pay = True,
+#                                     company_id=user,staff_id=staff.id)
+#                     party.save()
+#                     history = History(company_id=user,party_id=party.id,staff_id=staff.id,action='CREATED')
+#                     history.save()
+#                 else:
+#                     party = Parties(party_name = partyname,phone_number = mobilenumber, gstin = capGST,
+#                                     gst_type = gstintype, billing_address = address, state = state,
+#                                     email = email, date = Date,staff_id=staff.id,company_id=user)
+#                     party.save()
+#                     history = History(company_id=user,party_id=party.id,staff_id=staff.id,action='CREATED')
+#                     history.save()
+#         if buttonn == 'new':
+#             return redirect('parties_add_page')
+#         elif buttonn == 'old':
+#             return redirect('party_details',pk=mobilenumber,id=partyname)
+
+def party_save2(request):
     sid = request.session.get('staff_id')
     staff = staff_details.objects.get(id=sid)
     cmp = company.objects.get(id=staff.company.id)
-    user = cmp.id
-    
-    if request.method == 'POST':
-        partyname = request.POST['partyname'].capitalize()
-        mobilenumber = request.POST['mobilenumber']
-        gstin = '' if request.POST['gstintype'] == 'Unregistered/Consumers' else request.POST['gstin']
-        gstintype = request.POST['gstintype']
-        state = request.POST['state']
-        email = request.POST['email']
-        Date = request.POST['date']
-        address = request.POST['address']
-        balance = request.POST['balance']
-        buttonn = request.POST['buttonn']
-        capGST = gstin.upper()
-        
-        if balance == '' or balance == '0' :
-               
-            party = Parties(party_name = partyname,phone_number = mobilenumber, gstin = capGST,
-                            gst_type = gstintype, billing_address = address, state = state,
-                            email = email, date = Date,company_id=user,staff_id=staff.id)
-            party.save()
-            history = History(company_id=user,party_id=party.id,staff_id=staff.id,action='CREATED')
-            history.save()
-            
-        else:
-            if request.POST['pay_recieve'] != '':
-                pay_recieve = request.POST['pay_recieve']
-                if pay_recieve == 'receive':
-                    party = Parties(party_name = partyname,phone_number = mobilenumber, gstin = capGST,
-                                    gst_type = gstintype, billing_address = address, state = state,
-                                    email = email, date = Date,opening_balance = balance,to_recieve = True,
-                                    company_id=user,staff_id=staff.id)
-                    party.save()
-                    history = History(company_id=user,party_id=party.id,staff_id=staff.id,action='CREATED')
-                    history.save()
-                elif pay_recieve == 'pay':
-                    neg_balance = -int(balance)
-                    party = Parties(party_name = partyname,phone_number = mobilenumber, gstin = capGST,
-                                    gst_type = gstintype, billing_address = address, state = state,
-                                    email = email, date = Date,opening_balance = neg_balance,to_pay = True,
-                                    company_id=user,staff_id=staff.id)
-                    party.save()
-                    history = History(company_id=user,party_id=party.id,staff_id=staff.id,action='CREATED')
-                    history.save()
-                else:
-                    party = Parties(party_name = partyname,phone_number = mobilenumber, gstin = capGST,
-                                    gst_type = gstintype, billing_address = address, state = state,
-                                    email = email, date = Date,staff_id=staff.id,company_id=user)
-                    party.save()
-                    history = History(company_id=user,party_id=party.id,staff_id=staff.id,action='CREATED')
-                    history.save()
-        if buttonn == 'new':
-            return redirect('parties_add_page')
-        elif buttonn == 'old':
-            return redirect('party_details',pk=mobilenumber,id=partyname)
 
+    party_name = request.POST['partyname']
+    email = request.POST['partyemail']
+    
+    phone_number = request.POST.get('partyphno', None)
+    state = request.POST['splystate']
+    address = request.POST['baddress']
+    gst_type = request.POST['modalgsttype']
+    gst_no = request.POST['gstin']
+    openingbalance = request.POST.get('openbalance')
+    payment = request.POST.get('payradio')
+    End_date = date.today()
+    buttonValue = request.POST['buttonvalue']
+    
+    
+    part = Parties(
+        party_name=party_name,
+        gstin=gst_no,
+        phone_number=phone_number,
+        gst_type=gst_type,
+        state=state,
+        billing_address=address,
+        email=email,
+        opening_balance=openingbalance,
+        to_pay= True if payment == 'to_pay' else False,
+        to_recieve= True if payment == 'to_recieve' else False,
+        date=End_date,
+        company=cmp,
+        staff=staff,
+
+        
+    )
+    part.save()
+    history_action =  "Created"
+    history = History(
+        staff=staff,
+        company=cmp,
+        party=part,
+        action=history_action,
+    )
+    history.save()
+    
+    if buttonValue == 'new':
+      return redirect('parties_add_page')
+    elif buttonValue == 'old':
+      return redirect('party_details', pk=phone_number, id=party_name)
+   
 
 def party_delete(request,pk):
     sid = request.session.get('staff_id')
@@ -4122,12 +4181,15 @@ def party_details(request,pk,id):
    cmp = company.objects.get(id=staff.company.id)
    user = cmp.id
    party = Parties.objects.filter(phone_number=pk,party_name=id,company_id=user).order_by('date')
-   parties = Parties.objects.filter(company_id=user).values('party_name','phone_number').annotate(total_amount=Sum('opening_balance')).distinct().order_by('party_name')
+   parties = Parties.objects.filter(company_id=user).values('party_name','phone_number','to_recieve','to_pay','id').annotate(total_amount=Sum('opening_balance')).distinct().order_by('party_name')
    details =  Parties.objects.get(phone_number=pk,party_name=id,company_id=user) 
+   pp = Parties.objects.get(phone_number=pk,party_name=id,company_id=user)
+   cnote = Creditnote.objects.filter(company_id=user,party_id=pp.id)
+   invoice = SalesInvoice.objects.filter(company_id=user,party_id=pp.id)
+   pbill = PurchaseBill.objects.filter(company_id=user,party_id=pp.id)
+   pdebit = purchasedebit.objects.filter(company_id=user,party_id=pp.id)
    
-   for index, part in enumerate(party, start=1):
-      part.index = index
-   return render(request,'parties_details.html',{'party':party, 'details':details,'cmp':cmp,'staff':staff,'parties':parties})
+   return render(request,'parties_details.html',{'party':party, 'details':details,'cmp':cmp,'staff':staff,'parties':parties,'cnote':cnote,'invoice':invoice,'pbill':pbill,'pdebit':pdebit,})
 
 
 def party_save_validation_ajax(request):

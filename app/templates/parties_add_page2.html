@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<style>
+    #input,select,textarea,#gstinInput{
+        box-shadow: 3px 3px 3px 0px gray;
+        border: 1px solid gray;        
+    }
+    .form-control{
+        
+        border: 1px solid gray;
+        
+    }
+    #input:hover{
+        box-shadow: none;
+        
+    }
+    label{
+        color: black;
+    }
+    body{
+        /* background-color: rgb(130, 144, 199); */
+        background-color: rgb(117, 118, 177);
+        
+    }
+    @media(min-width:768px){
+        .form-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 125px, white 17px, white 100%);
+    }
+    }
+    @media(max-width:768px){
+        .form-div{
+        background: linear-gradient(#3d4465 0%, #3d4465 125px, white 17px, white 100%);
+    }
+    }
+    .success {
+          color: green;
+      }
+
+      .error {
+          color: red;
+      }
+</style>
+<!-- Add this in the head section of your HTML -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+<div class="container col-md-10 mr-1" style="min-height: 100vh;" >
+    <br><br><br><br><br>    
+    <form action="{% url 'party_save' %}" id="partyForm" class="col-md-10 container form-div" method="post" enctype="multipart/form-data" style="background-color: white; padding: 30px; border-radius: 8px;">
+        {% csrf_token %}
+        <br><br>
+    <div class="container col-md-10"> 
+        <h2 style="color: white;">Add New Party</h2><br>
+        
+        <!-- {% for m in messages %}
+        <h5 style="background-color: rgba(255, 0, 0, 0.4);color: red;font-size: larger;padding: 10px;border-radius: 10px;text-align: center;">{{m}}</h5>
+        {% endfor %} -->
+
+        <div class="form-group row">
+            <div class="col"><label for=""> Party Name:</label><input id="input" type="text" name="partyname" class="form-control" placeholder="Party Name" oninput="nameCheck(this.value)" onchange="nameCheck(this.value)" required><label class="ml-2 mt-1" id="namemsg"></label></div>
+            <div class="col"><label for=""> Phone Number:</label><input id="input" type="text" name="mobilenumber" class="form-control" pattern="[1-9][0-9]{9}" placeholder="Phone Number" oninput="phoneCheck(this.value)" onchange="phoneCheck(this.value)" required><label class="ml-2 mt-1" id="phonemsg"></label></div>
+            <div class="col-md">
+                <label for="">GST Type:</label>
+                    <select name="gstintype" id="gstintype" class="form-control" onchange="toggleGSTIN()" required>
+                        <option value="">--Select GST type--</option>
+                        <option value="Unregistered/Consumers">Unregistered/Consumers</option>
+                        <option value="Registered Buisness - Regular">Registered Buisness - Regular</option>
+                        <option value="Registered Buisness - Composition">Registered Buisness - Composition</option>
+                    </select>
+            </div>
+            
+            
+        </div>
+
+        
+
+        <div class="row form-group">
+            <div class="col" id="gstinInputDiv"><label for=""> GSTIN:</label><input style="text-transform: uppercase;" id="gstinInput" type="text" name="gstin" class="form-control" placeholder="GSTIN" id="gstinInput" pattern="[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9]{1}Z[0-9]{1}" oninput="gstCheck(this.value)" onchange="gstCheck(this.value)" required> <small>#27ABCDE1234F1Z5</small> <label class="ml-2 mt-1" id="gstmsg"></label></div>
+            
+            <script>
+                function toggleGSTIN() {
+                    var gstTypeSelect = document.getElementById("gstintype");
+                    var gstinInput = document.getElementById("gstinInput");
+                    var gstinDiv = document.getElementById("gstinInputDiv");
+
+                    if (gstTypeSelect.value === "Unregistered/Consumers") {
+                        gstinInput.removeAttribute("required");
+                        // gstinInput.disabled = true;
+                        gstinDiv.style.display = 'none';
+                    } else {
+                        gstinInput.setAttribute("required", "");
+                        // gstinInput.disabled = false;
+                        gstinDiv.style.display = '';
+                    }
+                }
+            </script>
+
+            <div class="col-md">
+                <label for="">State</label>
+                    <select name="state" class="form-control">
+                        <option value="">--Select State--</option>
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                        <option value="Assam">Assam</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Chhattisgarh">Chhattisgarh</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Haryana">Haryana</option>
+                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                        <option value="Jharkhand">Jharkhand</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Manipur">Manipur</option>
+                        <option value="Meghalaya">Meghalaya</option>
+                        <option value="Mizoram">`Mizoram</option>
+                        <option value="Nagaland">Nagaland</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Sikkim">Sikkim</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="Tripura">Tripura</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
+                        <option value="West Bengal">West Bengal</option>
+                        
+                    </select>
+            </div>
+
+            <div class="col-md"><label for="">Email:</label><input id="input" type="email" name="email" class="form-control" placeholder="Email" oninput="emailCheck(this.value)" onchange="emailCheck(this.value)" ><label class="ml-2" id="emailmsg"></label></div>
+            <div class="col-md"><label for="">Date</label><input id="input" type="date" name="date" class="form-control" value="{{todaydate}}"  ></div>
+ 
+        </div><br>
+
+        <div class="row form-group">
+            <div class="col-md-6">
+                <label for="">Billing Address</label>
+                <textarea name="address" id="" cols="10" rows="4" class="form-control" placeholder="Billing Address..."></textarea>
+            </div>
+        </div>
+        <br>
+        <div class="row form-group">
+            <div class="col-md-4">
+                <label for="">Balance</label>
+                <input id="input" type="number" name="balance" class="form-control" placeholder="Balance" min="0">
+            </div>
+        </div>
+        <div class="row form-group radio-buttons ml-1" style="display: none;">
+            
+            <div class="col-md-2"><input type="radio" name="pay_recieve" value="pay"><span style="color: black;" class="ml-1">To Pay</span></div>
+            <div class="col-md-2"><input type="radio" name="pay_recieve" value="receive"><span style="color: black;" class="ml-1">To Receive</span></div>
+            
+        </div><br>
+
+        <input type="hidden" id="buttonValue" name="buttonn" value="">
+            <center>
+                <button style="background-color: #3d4465;color: white;" onmouseover="this.style.backgroundColor='#480ceb'" onmouseout="this.style.backgroundColor='#3d4465'" class="btn " onclick="setButtonValue(this.value)" value="new" >Save & New</button> 
+                <button style="background-color: #3d4465;color: white;" onmouseover="this.style.backgroundColor='#480ceb'" onmouseout="this.style.backgroundColor='#3d4465'" class="btn " onclick="setButtonValue(this.value)" value="old" >Save </button> 
+            </center>
+        
+       
+
+    </div>
+
+</form><br><br><br>
+</div>
+
+</div>
+
+<script>
+    function setButtonValue(value) {
+        document.getElementById("buttonValue").value = value;
+    }
+
+
+    $(document).ready(function() {
+        $("#partyForm").submit(function(e) {
+            e.preventDefault(); // Prevent the form from submitting normally
+
+            var formData = $(this).serialize(); // Serialize form data
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'party_save_validation_ajax' %}", // Replace with the actual URL
+                data: formData,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        $("#partyForm").unbind('submit').submit();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Error handling
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+
+
+            // name check
+            function nameCheck(valuee) {
+                            $.ajax({
+                                type: "POST",
+                                url: "{% url 'party_save_namecheck_ajax' %}", // Replace with the actual URL
+                                headers: {
+                                        "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+                                    },
+                                data: {'partyname':valuee},
+                                dataType: 'json',
+                                success: function(response) {
+                                    if (response.success) {
+                                        $('#namemsg').text('Valid').removeClass('error').addClass('success');
+                                    } else {
+                                        $('#namemsg').text(response.message).removeClass('success').addClass('error');
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    // Error handling
+                                    console.error(xhr.responseText);
+                                }
+                            });
+                        };
+
+
+
+            // phonr no check
+            function phoneCheck(valuee) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'party_save_phonecheck_ajax' %}", // Replace with the actual URL
+                        headers: {
+                                "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+                            },
+                        data: {'mobilenumber':valuee},
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                $('#phonemsg').text('Valid').removeClass('error').addClass('success');
+                            } else {
+                                $('#phonemsg').text(response.message).removeClass('success').addClass('error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // Error handling
+                            console.error(xhr.responseText);
+                        }
+                    });
+                };
+
+
+
+            // gst num check
+            function gstCheck(valuee) {
+                var gsttype = document.getElementById('gstintype').value;
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'party_save_gstcheck_ajax' %}", // Replace with the actual URL
+                        headers: {
+                                "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+                            },
+                        data: {
+                            'gstin':valuee,
+                            'gstintype':gsttype
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                $('#gstmsg').text('Valid').removeClass('error').addClass('success');
+                            } else {
+                                $('#gstmsg').text(response.message).removeClass('success').addClass('error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // Error handling
+                            console.error(xhr.responseText);
+                        }
+                    });
+                };
+
+
+            // email check
+            function emailCheck(email) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'party_save_emailcheck_ajax' %}", // Replace with the actual URL
+                        headers: {
+                                "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token in the headers
+                            },
+                        data: {'email':email},
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                $('#emailmsg').text('Valid').removeClass('error').addClass('success');
+                            } else {
+                                $('#emailmsg').text(response.message).removeClass('success').addClass('error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // Error handling
+                            console.error(xhr.responseText);
+                        }
+                    });
+                };
+</script>
+
+
+<script>
+    
+    // Function to show/hide radio buttons based on the balance value
+    function toggleRadioButtons() {
+        var balanceInput = document.querySelector('[name="balance"]');
+        var radioButtonsContainer = document.querySelector('.radio-buttons');
+
+        if (parseFloat(balanceInput.value) > 0) {
+            radioButtonsContainer.style.display = 'block';
+        } else {
+            radioButtonsContainer.style.display = 'none';
+        }
+    }
+
+    // Initial state on page load
+    toggleRadioButtons();
+
+    // Bind the function to the input's input event
+    document.querySelector('[name="balance"]').addEventListener('input', toggleRadioButtons);
+
+    
+// ------------------------------------------------------------------------------------------------------------
+
+
+        function validateGSTIN() {
+            // Get the input value
+            var gstinInput = document.getElementById('gstinInput').value.trim();
+
+            // Define the GSTIN pattern
+            var gstinPattern = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9]{1}Z[0-9]{1}$/;
+
+            // Check if the input matches the pattern
+            if (!gstinPattern.test(gstinInput)) {
+                // Set a custom validation message
+                document.getElementById('gstinInput').setCustomValidity('Please enter a valid GSTIN number.');
+            } else {
+                // Clear the custom validation message
+                document.getElementById('gstinInput').setCustomValidity('');
+            }
+        }
+    
+// ------------------------------------------------------------------------------------------------------------
+
+</script>
+
+
+{% endblock %}

@@ -72,7 +72,7 @@
         min-height:90vh;
     }
     .transaction-div{
-        background: linear-gradient(#3d4465 0%, #3d4465 135px, white 135px, white 100%);
+        background: linear-gradient(#3d4465 0%, #3d4465 199px, white 135px, white 100%);
         min-height: 59vh;
     }
     .whhole{
@@ -87,7 +87,7 @@
         
     }
     .transaction-div{
-        background: linear-gradient(#3d4465 0%, #3d4465 180px, white 180px, white 100%);
+        background: linear-gradient(#3d4465 0%, #3d4465 242.5px, white 180px, white 100%);
         min-height: 10vh;
     }
     .whhole{
@@ -100,6 +100,10 @@
     }
     .button-hover:hover{
         background-color:#4d5fbc ;
+        color: white;
+    }
+    .bg-color{
+        background-color: #3d4465;
         color: white;
     }
 </style>
@@ -169,9 +173,8 @@
                     </div>
                 </td>
                 
-                {% if i.total_amount >= 0 %}
-                <td class="col-4" style="color: rgb(71, 216, 71)  ">{{i.total_amount}} 
-                </td>
+                {% if i.to_recieve == True %}
+                <td class="col-4" style="color: rgb(71, 216, 71)  ">{{i.total_amount}}</td>
                 {% else %}
                 <td class="col-4" style="color: crimson ">{{i.total_amount}}</td>
                 {% endif %}
@@ -209,7 +212,7 @@
             
             <div class="col name-div" style="padding: 20px;border-radius: 8px;" >
                 <div class="row mt-2">
-                    <div class="col"><h3 id="namee" style="text-transform: uppercase;font-size: 25px;color: white;" >{{details.party_name}}</h3></div> 
+                    <div class="col ml-md-4"><h3 id="namee" style="text-transform: uppercase;font-size: 25px;color: white;margin-left: 5px;" >{{details.party_name}}</h3></div> 
                     <!-- <div style="text-align: right;" class="col"><a class="btn button-hover" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</a></div>  -->
                 </div><br> 
                 <script>
@@ -217,7 +220,7 @@
                         window.history.back();
                     }
                 </script>
-            <div class="row mt-2" id="thirdTable">
+            <div class="row mt-2 ml-md-3" id="thirdTable">
                 <div class="col">
                     <label for="">Phone : </label> <span id="number"> {{details.phone_number}} </span><br>
                     <label for="">Email : </label> <span id="email">{% if details.email != '' %} {{details.email}} {% else %} <a href="{% url 'party_edit' pk=details.phone_number id=details.party_name %}"><i class="fa-solid fa-envelope"></i> Add Email</a> {% endif %}</span><br>
@@ -242,13 +245,13 @@
             <div class="row">
                 <div class="col-md transaction-div" style="padding: 40px;border-radius: 8px;">
                     <div class="row">
-                        <h3 style="color: white;">Transactions</h3>
+                        <h3 style="color: white;" class="ml-md-2">Transactions</h3>
                         
-                        <input class="form-control col-md-3 mt-2" type="text"  autocomplete="off" id="myInput1" onkeyup="filterTransaction(this);" onclick="myFunction1()"  placeholder="search"/>
+                        <input class="form-control col-md-3 mt-2 ml-md-4" type="text" autocomplete="off" id="myInput2" onkeyup="filterTransaction2()" onclick="clearSearchInput()" placeholder="Search"/>
 
-                        <div class="col-md-5"></div>
+                        <div class="col-md-4"></div>
 
-                        <div class="col" >
+                        <div class="col ml-md-3" >
                             
                             <button class="btn mb-2 mt-2 button-hover" onclick="ExportAsPDF()">PDF <i class="fa-solid fa-file-pdf"></i></button>
                             <button class="btn mb-2 mt-2 button-hover" onclick="printTable()">Print <i class="fa-solid fa-print"></i></button>
@@ -262,18 +265,18 @@
         
         
         
-                    <div class="table table-responsive row" id="pdftable" >
+                    <div class="table table-responsive row m-0" id="pdftable" >
                         
-                            <table class="table" id="detailsTable">
+                            <table class="table m-0" id="detailsTable">
                                 <thead >
-                                    <th>#</th>
+                                    <th style="background-color: #3d4465;color: white;">#</th>
                                     <th hidden>PARTY NAME </th>
-                                    <th>TYPE </th>
+                                    <th style="background-color: #3d4465;color: white;">TYPE </th>
                                     <td hidden>Mobile</td>
-                                    <th>NUMBER</th>
-                                    <th>DATE</th>
-                                    <th>TOTAL</th>
-                                    <th>BALANCE</th>
+                                    <th style="background-color: #3d4465;color: white;">NUMBER</th>
+                                    <th style="background-color: #3d4465;color: white;">DATE</th>
+                                    <th style="background-color: #3d4465;color: white;">TOTAL</th>
+                                    <th style="background-color: #3d4465;color: white;">BALANCE</th>
                                     <th hidden></th>
                                     <th hidden></th>
                                     <th hidden></th>
@@ -282,7 +285,6 @@
                                 <tbody>
                                     {% for i in party %}
                                     <tr  class="party-row">
-                                        <td>{{i.index}}</td>
                                         <td hidden>{{i.party_name}}</td>
                                         <td>{% if i.opening_balance > 0 %} Opening Balance{% elif 0 > i.opening_balance %} Opening Balance{% else %}{% endif %}</td>
                                         
@@ -297,8 +299,118 @@
                                         
                                     </tr>
                                     {% endfor %}
+                                    {% for i in invoice %}
+                                    <tr  class="party-row">
+                                        
+                                        <td hidden>{{i.party_name}}</td>
+                                        <td>Invoice</td>
+                                        <td hidden>{{i.phone_number}}</td>
+                                        <td>{{i.invoice_no}}</td>
+                                        <td>{{i.date}}</td>
+                                        <td>{{i.grandtotal}}</td>
+                                        <td>{{i.totalbalance}}</td>
+                                        <td hidden>{{i.email}}</td>
+                                        <td hidden>{{i.billing_address}}</td>
+                                        <td hidden>{{i.gstin}}</td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                    {% for i in cnote %}
+                                    <tr  class="party-row">
+                                        
+                                        <td hidden>{{i.party_name}}</td>
+                                        <td>Credit Note</td>
+                                        <td hidden>{{i.phone_number}}</td>
+                                        <td>{{i.returnno}}</td>
+                                        <td>{{i.date}}</td>
+                                        <td>{{i.grandtotal}}</td>
+                                        <td>{{i.grandtotal}}</td>
+                                        <td hidden>{{i.email}}</td>
+                                        <td hidden>{{i.billing_address}}</td>
+                                        <td hidden>{{i.gstin}}</td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                    {% for i in pbill %}
+                                    <tr  class="party-row">
+                                        
+                                        <td hidden>{{i.party_name}}</td>
+                                        <td>Purchase Bill</td>
+                                        <td hidden>{{i.phone_number}}</td>
+                                        <td>{{i.billno}}</td>
+                                        <td>{{i.billdate}}</td>
+                                        <td>{{i.grandtotal}}</td>
+                                        <!-- <td>{% if i.balance == None %}0.00{% else %}{{i.balance}}{% endif %}</td> -->
+                                        <td>{{i.grandtotal}}</td>
+                                        <td hidden>{{i.email}}</td>
+                                        <td hidden>{{i.billing_address}}</td>
+                                        <td hidden>{{i.gstin}}</td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                    {% for i in pdebit %}
+                                    <tr  class="party-row">
+                                        
+                                        <td hidden>{{i.party_name}}</td>
+                                        <td>Purchase Debit</td>
+                                        <td hidden>{{i.phone_number}}</td>
+                                        <td>{{i.reference_number}}</td>
+                                        <td>{{i.debitdate}}</td>
+                                        <td>{% if i.grandtotal == '0.00' %}0.0{% else %}{{i.grandtotal}}{% endif %}</td>
+                                        <td>{% if i.grandtotal == None %}0.00{% else %}{{i.grandtotal}}{% endif %}</td>
+                                        <td hidden>{{i.email}}</td>
+                                        <td hidden>{{i.billing_address}}</td>
+                                        <td hidden>{{i.gstin}}</td>
+                                        
+                                    </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
+                            <script>
+                                var table = document.getElementById('detailsTable');
+                                var tbody = table.getElementsByTagName('tbody')[0];
+                                var rows = tbody.getElementsByTagName('tr');
+                            
+                                // Loop through each row and add index cell
+                                for (var i = 0; i < rows.length; i++) {
+                                    // Create a new cell for index
+                                    var indexCell = document.createElement('td');
+                                    // Set the text content to the row index
+                                    indexCell.textContent = i + 1;
+                                    // Add the cell to the row
+                                    rows[i].insertBefore(indexCell, rows[i].firstChild);
+                                }
+
+                                function filterTransaction2() {
+                                    var input, filter, tbody, tr, td, i, j, txtValue;
+                                    input = document.getElementById("myInput2");
+                                    filter = input.value.toUpperCase();
+                                    tbody = document.querySelector("#detailsTable tbody");
+                                    tr = tbody.getElementsByTagName("tr");
+                                    for (i = 0; i < tr.length; i++) {
+                                        var found = false;
+                                        td = tr[i].getElementsByTagName("td");
+                                        for (j = 0; j < td.length; j++) {
+                                            txtValue = td[j].textContent || td[j].innerText;
+                                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                                found = true;
+                                                break;
+                                            }
+                                        }
+                                        if (found) {
+                                            tr[i].style.display = "";
+                                        } else {
+                                            tr[i].style.display = "none";
+                                        }
+                                    }
+                                }
+
+                                function clearSearchInput() {
+                                    document.getElementById("myInput2").value = "";
+                                    filterTransaction2();
+                                }
+
+                            </script>
                     </div>
                 </div>
             </div>
@@ -470,28 +582,28 @@ function getHeadingFromTable(tableId, columnIndex) {
 // ----------------------------------------------------------------------------------
 // transaction filter table
 function filterTransaction(input) {
-                                var filterValue = input.value.toLowerCase();
-                                var tableRows = document.querySelectorAll('#thirdTableTable tbody tr');
+    var filter, table, tr, td, i, txtValue;
+    filter = input.value.toUpperCase();
+    table = document.getElementById("detailsTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0]; // Adjust index based on the column you want to filter
+        if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
 
-                                tableRows.forEach(function(row) {
-                                var cells = row.getElementsByTagName("td");
-                                var isVisible = false;
-
-                                for (var i = 0; i < cells.length; i++) {
-                                    var cellValue = cells[i].textContent || cells[i].innerText;
-                                    if (cellValue.toLowerCase().indexOf(filterValue) > -1) {
-                                    isVisible = true;
-                                    break;
-                                    }
-                                }
-
-                                if (isVisible) {
-                                    row.style.display = "table-row";
-                                } else {
-                                    row.style.display = "none";
-                                }
-                                });
-                            }
+// Optional: Function to clear input field when clicked
+function myFunction1() {
+    document.getElementById("myInput1").value = "";
+    filterTransaction(document.getElementById("myInput1"));
+}
 
 // --------------------------------------------------------------------------------------
 

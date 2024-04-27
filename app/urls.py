@@ -81,7 +81,7 @@ urlpatterns = [
     
     path('parties_add_page',views.parties_add_page,name='parties_add_page'),
     path('parties_table',views.parties_table,name='parties_table'),
-    path('party_save',views.party_save,name='party_save'),
+    # path('party_save',views.party_save,name='party_save'),
     path('party_delete/<int:pk>',views.party_delete,name='party_delete'),
     path('party_edit/<int:pk>/<str:id>',views.party_edit,name='party_edit'),
     path('party_update/<int:pk>',views.party_update,name='party_update'),
@@ -98,12 +98,10 @@ urlpatterns = [
     path('party_edit_phonecheck_ajax/<int:pk>',views.party_edit_phonecheck_ajax,name="party_edit_phonecheck_ajax"),
     path('party_edit_gstcheck_ajax/<int:pk>',views.party_edit_gstcheck_ajax,name="party_edit_gstcheck_ajax"),
     path('party_edit_emailcheck_ajax/<int:pk>',views.party_edit_emailcheck_ajax,name="party_edit_emailcheck_ajax"),
-
     path('create_item_valid_ajax',views.create_item_valid_ajax,name="create_item_valid_ajax"),
     path('edit_item_valid_ajax/<int:pk>',views.edit_item_valid_ajax,name="edit_item_valid_ajax"),
-    
 
-    # path('aaa',views.aaa,name="aaa"),
+    path('party_save2',views.party_save2,name="party_save2"),
     # path('aaa',views.aaa,name="aaa"),
     # path('aaa',views.aaa,name="aaa"),
 
