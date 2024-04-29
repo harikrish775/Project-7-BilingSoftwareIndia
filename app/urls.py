@@ -102,7 +102,7 @@ urlpatterns = [
     path('edit_item_valid_ajax/<int:pk>',views.edit_item_valid_ajax,name="edit_item_valid_ajax"),
 
     path('party_save2',views.party_save2,name="party_save2"),
-    # path('aaa',views.aaa,name="aaa"),
+    path('party_update2/<int:pk>',views.party_update2,name="party_update2"), 
     # path('aaa',views.aaa,name="aaa"),
 
     # end-----

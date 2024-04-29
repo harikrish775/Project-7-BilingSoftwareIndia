@@ -4044,7 +4044,7 @@ def party_save2(request):
     gst_no = request.POST['gstin']
     openingbalance = request.POST.get('openbalance')
     payment = request.POST.get('payradio')
-    End_date = date.today()
+    End_date = request.POST['partydate']
     buttonValue = request.POST['buttonvalue']
     
     
@@ -4165,7 +4165,68 @@ def party_update(request,pk):
           history.save()
           
           return redirect('party_details',pk=party.phone_number,id=party.party_name)
-    
+
+def party_update2(request,pk):
+    sid = request.session.get('staff_id')
+    staff = staff_details.objects.get(id=sid)
+    cmp = company.objects.get(id=staff.company.id)
+    party = Parties.objects.get(id=pk)
+    user = cmp.id
+    if request.method == 'POST':
+        
+        partyname = request.POST['partyname'].capitalize()
+        mobile = request.POST.get('partyphno', None)
+        email = request.POST['partyemail']
+        gstin = '' if request.POST['modalgsttype'] == 'Unregistered/Consumers' else request.POST['gstin']
+
+        if Parties.objects.filter(party_name = partyname, phone_number = mobile,company_id=user).exclude(id=pk).exists():
+          messages.error(request, 'User already exists!')
+          todaydate = date.today().isoformat()
+          partyy = get_object_or_404(Parties, phone_number=party.phone_number,party_name=party.party_name,company_id=user)
+          return render(request,'parties_edit.html',{'todaydate':todaydate,'partyy':partyy,'cmp':cmp,'staff':staff})
+        
+        elif Parties.objects.filter(phone_number = mobile,company_id=user).exclude(id=pk).exists():
+            messages.error(request, 'Phone number already exists!')
+            todaydate = date.today().isoformat()
+            partyy = get_object_or_404(Parties, phone_number=party.phone_number,party_name=party.party_name,company_id=user)
+            return render(request,'parties_edit.html',{'todaydate':todaydate,'partyy':partyy,'cmp':cmp,'staff':staff})
+        
+        elif Parties.objects.filter(party_name = partyname,company_id=user).exclude(id=pk).exists():
+            messages.error(request, 'Identical name exists! Please use initials.')
+            todaydate = date.today().isoformat()
+            partyy = get_object_or_404(Parties, phone_number=party.phone_number,party_name=party.party_name,company_id=user)
+            return render(request,'parties_edit.html',{'todaydate':todaydate,'partyy':partyy,'cmp':cmp,'staff':staff})
+           
+        else:
+
+          party.party_name = request.POST['partyname'].capitalize()
+          party.phone_number = request.POST.get('partyphno', None)
+          party.gstin = '' if request.POST['modalgsttype'] == 'Unregistered/Consumers' else request.POST['gstin']
+          party.gst_type = request.POST['modalgsttype']
+          party.state = request.POST['splystate'] 
+          party.email = request.POST['partyemail']
+          party.date = request.POST['partydate']
+          party.billing_address = request.POST['baddress']
+          party.opening_balance = request.POST['openbalance']
+
+          if float(request.POST['openbalance']) > 0:
+              if request.POST['payradio'] == 'to_pay':
+                party.to_pay = True
+                party.to_recieve = False                
+              else:
+                party.to_pay = False
+                party.to_recieve = True
+                
+          else :
+            party.opening_balance = 0
+          
+          party.save()
+          history = History(company_id=user,party_id=pk,staff_id=sid,action='UPDATED')
+          history.save()
+          
+          return redirect('party_details',pk=party.phone_number,id=party.party_name)
+   
+
 def parties_history(request,pk,id):
    sid = request.session.get('staff_id')
    staff = staff_details.objects.get(id=sid)
@@ -4192,8 +4253,7 @@ def party_details(request,pk,id):
    return render(request,'parties_details.html',{'party':party, 'details':details,'cmp':cmp,'staff':staff,'parties':parties,'cnote':cnote,'invoice':invoice,'pbill':pbill,'pdebit':pdebit,})
 
 
-def party_save_validation_ajax(request):
-    
+def party_save_validation_ajax(request):    
     sid = request.session.get('staff_id')
     staff = staff_details.objects.get(id=sid)
     cmp = company.objects.get(id=staff.company.id)
@@ -4254,8 +4314,7 @@ def party_edit_validation_ajax(request,pk):
         else:
           return JsonResponse({'success':True})
 
-def party_save_emailcheck_ajax(request):
-    
+def party_save_emailcheck_ajax(request):    
     sid = request.session.get('staff_id')
     staff = staff_details.objects.get(id=sid)
     cmp = company.objects.get(id=staff.company.id)
@@ -4263,14 +4322,18 @@ def party_save_emailcheck_ajax(request):
     
     if request.method == 'POST':
         email1 = request.POST['email']
-        if email1 == '':
-           return JsonResponse({'success':False,'message':''})
         
-        if Parties.objects.filter(email = email1,company_id=user).exists():
-            return JsonResponse({'success':False,'message':'Email already exists!'})
-           
+        emaill = re.compile(r"[a-zA-Z0-9._%+-]+@gmail\.com")
+        if email1 == '':
+            return JsonResponse({'success':False,'message':''}) 
         else:
-          return JsonResponse({'success':True})
+          if emaill.match(email1):
+            if Parties.objects.filter(email = email1,company_id=user).exists(): 
+                return JsonResponse({'success':False,'message':'Email already exists!'})           
+            else:
+              return JsonResponse({'success':True})
+          else:
+            return JsonResponse({'success':False,'message':'Please match the email format!'})
 
 def party_save_phonecheck_ajax(request):
     
@@ -4284,7 +4347,7 @@ def party_save_phonecheck_ajax(request):
         if mobilenumber == '': 
            return JsonResponse({'success':False,'message':''})
 
-        if  10 > len(mobilenumber):
+        if  10 != len(mobilenumber):
           return JsonResponse({'success':False,'message':'Please provide 10 digit number!'})
         
         if Parties.objects.filter(phone_number = mobilenumber,company_id=user).exists():
@@ -4337,7 +4400,6 @@ def party_save_gstcheck_ajax(request):
               return JsonResponse({'success': False, 'message': 'Invalid GSTIN format!'})
         
 def party_edit_emailcheck_ajax(request,pk):
-    
     sid = request.session.get('staff_id')
     staff = staff_details.objects.get(id=sid)
     cmp = company.objects.get(id=staff.company.id)
@@ -4345,14 +4407,18 @@ def party_edit_emailcheck_ajax(request,pk):
     
     if request.method == 'POST':
         email1 = request.POST['email']
-        if email1 == '':
-           return JsonResponse({'success':False,'message':''})
         
-        if Parties.objects.filter(email = email1,company_id=user).exclude(id=pk).exists():
-            return JsonResponse({'success':False,'message':'Email already exists!'})
-           
+        emaill = re.compile(r"[a-zA-Z0-9._%+-]+@gmail\.com")
+        if email1 == '':
+            return JsonResponse({'success':False,'message':''}) 
         else:
-          return JsonResponse({'success':True})
+          if emaill.match(email1):
+            if Parties.objects.filter(email = email1,company_id=user).exclude(id=pk).exists():
+                return JsonResponse({'success':False,'message':'Email already exists!'})           
+            else:
+              return JsonResponse({'success':True})
+          else:
+            return JsonResponse({'success':False,'message':'Please match the email format!'})
 
 def party_edit_phonecheck_ajax(request,pk):
     
@@ -4366,7 +4432,7 @@ def party_edit_phonecheck_ajax(request,pk):
         if mobilenumber == '': 
            return JsonResponse({'success':False,'message':''})
 
-        if  10 > len(mobilenumber):
+        if  10 != len(mobilenumber) :
           return JsonResponse({'success':False,'message':'Please provide 10 digit number!'})
         
         if Parties.objects.filter(phone_number = mobilenumber,company_id=user).exclude(id=pk).exists():
