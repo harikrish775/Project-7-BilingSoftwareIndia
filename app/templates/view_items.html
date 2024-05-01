@@ -95,6 +95,10 @@
     .abc{
         margin-left: 10vw;
     }
+    #pdftable{
+        margin-left: -40px;
+        width: 107%;
+    }
     
     }
 @media(max-width:768px){
@@ -132,7 +136,7 @@
             <!-- --------------------name--------------------- -->
         
             <div class="col-11 item-div" style="background-color: white ;padding: 20px;border-radius: 8px; margin-left: 2vw;" >
-                <div class="row">
+                <div class="row mx-md-4">
                     <div class="col-md-8">
                         <p class="tb fw-bolder fs-5 text-white ml-md-3" style="color: black;">{{ first_item.item_name|upper }} <span class="fa fa-share ps-1 tb"></span></p>
                     <h3 id="namee" style="text-transform: uppercase;font-size: 25px;" ></h3></div>
@@ -140,7 +144,7 @@
                       
 
                      <div style="text-align: right;" class="col-md mr-md-3">
-                        <button style="height: 40px;" class=" btn button-hover mb-2" data-bs-toggle="modal" data-bs-target="#myModal1" data-bs-whatever="@getbootstrap"
+                        <button style="height: 37px;" class=" btn button-hover mb-2" data-bs-toggle="modal" data-bs-target="#myModal1" data-bs-whatever="@getbootstrap"
                         hx-get="{% url 'itemmodaladjust' first_item.id %}"
                         hx-trigger="click delay:0s"
                         hx-target="#item_get_details_for_modal_target"
@@ -150,17 +154,17 @@
                     </div> 
                     </div><br>
                      
-            <div class="row" id="thirdTable" style="color: black;">
+            <div class="row mx-md-4" id="thirdTable" style="color: black;">
                 <div class="col-md ml-md-3">
                     <div class="">
                         <p class="tb fw-bolder fs-5">SALE PRICE  <span class="ps-2 tg">: ₹{{ first_item.item_sale_price }}</span></p>
                         <p class="tb fw-bolder fs-5">STOCK QUANTITY  <span class="ps-2 tg">: {{ first_item.item_current_stock }}</span></p>
                     </div>
                 </div>
-                <div class="col-md">
+                <div class="col-md ml-5">
                     <div class="abc">
-                        <p class="tb fw-bolder fs-5">PURCHASE PRICE  <span class="ps-2 tg">: ₹{{ first_item.item_purchase_price }}</span></p>
-                        <p class="tb fw-bolder fs-5">STOCK VALUE  <span class="ps-2 tg">: ₹{{ first_item.item_current_stock|mul:first_item.item_purchase_price }}</span></p>
+                        <p class="tb ml-5 fw-bolder fs-5">PURCHASE PRICE  <span class="ps-2 tg">: ₹{{ first_item.item_purchase_price }}</span></p>
+                        <p class="tb ml-5 fw-bolder fs-5">STOCK VALUE  <span class="ps-2 tg">: ₹{{ first_item.item_current_stock|mul:first_item.item_purchase_price }}</span></p>
                     </div>
                 </div>
                 
@@ -177,7 +181,7 @@
         
             <div class="row">
                 <div class="col-11 tran-div mb-3" style="background-color: white ; padding: 40px;border-radius: 8px; margin-left: 2vw;min-height: 50vh;">
-                    <div class="row ">
+                    <div class="row mx-md-4">
                         <h3 class="text-white">Transactions</h3>
                         
                         <input class="form-control col-md-3 ml-md-2" type="text"  autocomplete="off" id="myInput1"   placeholder="search"/>
@@ -195,11 +199,11 @@
         
                     <div class="table table-responsive row" id="pdftable" >
                         
-                            <table class="table" id="detailsTable">
+                            <table class="table" id="detailsTable" >
                                 <thead>
                                     <th style="color: white;background-color: #3d4465;" class="text-center ">TYPE </th>
                                     <th style="color: white;background-color: #3d4465;" class="text-center ">INVOICE </th>
-                                    <th style="color: white;background-color: #3d4465;" class="text-center ">NAME</th>
+                                    <th style="color: white;background-color: #3d4465; width: 20%;" class="text-center ">NAME</th>
                                     <th style="color: white;background-color: #3d4465;" class="text-center ">DATE </th>
                                     <th style="color: white;background-color: #3d4465;" class="text-center ">QUANTITY</th>
                                     <th style="color: white;background-color: #3d4465;" class="text-center ">PRICE</th>
@@ -219,7 +223,7 @@
                                         <td class="text-center">{{ i.trans_qty }}</td>
                                         <td class="text-center"></td>
                                         <td class="text-center balance-column">{{ first_item.item_current_stock }}</td>
-                                        {% comment %} <td class="text-center">{{ i.action }}</td>
+                                        <!-- {% comment %} <td class="text-center">{{ i.action }}</td>
                                         <td class="text-center">{{ i.done_by_name }}</td> {% endcomment %}
                                         <td class="text-center pdf-hidden">
                                             <a style="color: blue; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#myModal2" class=" fa fa-edit  tb hide_table_text_v" 
@@ -229,7 +233,99 @@
                                             <a title="Delete Profile" style="color: red; " id="delete" class="fa fa-trash" href="{% url 'transaction_delete'  i.pk %}" ><small>Delete</small> </a>
 
                                         
-                                        </td>
+                                        </td> -->
+                                        
+                                    </tr>
+                                   {% endfor %}
+                                   {% for i in invoice %}
+                                    <tr  class="item-row" id="transaction_{{ i.pk }}">
+                                        <td class="text-center">Invoice</td>
+                                        <td class="text-center">{{i.salesinvoice.invoice_no}}</td>
+                                        <td class="text-center">{{i.salesinvoice.party_name}}</td>
+                                        <td class="text-center">{{ i.salesinvoice.date|date:"d-m-Y" }}</td>
+                                        <td class="text-center">{{ i.quantity }}</td>
+                                        <td class="text-center">{{i.item.item_sale_price}}</td>
+                                        <td class="text-center balance-column">{{ first_item.item_current_stock }}</td>
+                                        <!-- {% comment %} <td class="text-center">{{ i.action }}</td>
+                                        <td class="text-center">{{ i.done_by_name }}</td> {% endcomment %}
+                                        <td class="text-center pdf-hidden">
+                                            <a style="color: blue; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#myModal2" class=" fa fa-edit  tb hide_table_text_v" 
+                                            hx-get="{% url 'edititemmodaladjust' first_item.id i.id %}"
+                                            hx-trigger="click delay:0s"
+                                            hx-target="#item_transaction_view_or_edit_target"><small> Edit</small></a>                                  
+                                            <a title="Delete Profile" style="color: red; " id="delete" class="fa fa-trash" href="{% url 'transaction_delete'  i.pk %}" ><small>Delete</small> </a>
+
+                                        
+                                        </td> -->
+                                        
+                                    </tr>
+                                   {% endfor %}
+                                   {% for i in cnote %}
+                                    <tr  class="item-row" id="transaction_{{ i.pk }}">
+                                        <td class="text-center">Credit Note</td>
+                                        <td class="text-center">{{i.credit.returnno}}</td>
+                                        <td class="text-center">{{i.credit.party_name}}</td>
+                                        <td class="text-center">{{ i.credit.date|date:"d-m-Y" }}</td>
+                                        <td class="text-center">{{ i.qty }}</td>
+                                        <td class="text-center">{{i.item.item_sale_price}}</td>
+                                        <td class="text-center balance-column">{{ first_item.item_current_stock }}</td>
+                                        <!-- {% comment %} <td class="text-center">{{ i.action }}</td>
+                                        <td class="text-center">{{ i.done_by_name }}</td> {% endcomment %}
+                                        <td class="text-center pdf-hidden">
+                                            <a style="color: blue; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#myModal2" class=" fa fa-edit  tb hide_table_text_v" 
+                                            hx-get="{% url 'edititemmodaladjust' first_item.id i.id %}"
+                                            hx-trigger="click delay:0s"
+                                            hx-target="#item_transaction_view_or_edit_target"><small> Edit</small></a>                                  
+                                            <a title="Delete Profile" style="color: red; " id="delete" class="fa fa-trash" href="{% url 'transaction_delete'  i.pk %}" ><small>Delete</small> </a>
+
+                                        
+                                        </td> -->
+                                        
+                                    </tr>
+                                   {% endfor %}
+                                   {% for i in pbill %}
+                                    <tr  class="item-row" id="transaction_{{ i.pk }}">
+                                        <td class="text-center">Bill</td>
+                                        <td class="text-center">{{i.purchasebill.billno }}</td>
+                                        <td class="text-center">{{i.purchasebill.party.party_name}}</td>
+                                        <td class="text-center">{{ i.purchasebill.billdate|date:"d-m-Y" }}</td>
+                                        <td class="text-center">{{ i.qty }}</td>
+                                        <td class="text-center">{{i.product.item_purchase_price}}</td>
+                                        <td class="text-center balance-column">{{ first_item.item_current_stock }}</td>
+                                        <!-- {% comment %} <td class="text-center">{{ i.action }}</td>
+                                        <td class="text-center">{{ i.done_by_name }}</td> {% endcomment %}
+                                        <td class="text-center pdf-hidden">
+                                            <a style="color: blue; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#myModal2" class=" fa fa-edit  tb hide_table_text_v" 
+                                            hx-get="{% url 'edititemmodaladjust' first_item.id i.id %}"
+                                            hx-trigger="click delay:0s"
+                                            hx-target="#item_transaction_view_or_edit_target"><small> Edit</small></a>                                  
+                                            <a title="Delete Profile" style="color: red; " id="delete" class="fa fa-trash" href="{% url 'transaction_delete'  i.pk %}" ><small>Delete</small> </a>
+
+                                        
+                                        </td> -->
+                                        
+                                    </tr>
+                                   {% endfor %}
+                                   {% for i in pdebit %}
+                                    <tr  class="item-row" id="transaction_{{ i.pk }}">
+                                        <td class="text-center">Debit</td>
+                                        <td class="text-center">{{i.pdebit.reference_number }}</td>
+                                        <td class="text-center">{{i.pdebit.party.party_name}}</td>
+                                        <td class="text-center">{{ i.pdebit.debitdate|date:"d-m-Y" }}</td>
+                                        <td class="text-center">{{ i.qty }}</td>
+                                        <td class="text-center">{{i.product.item_purchase_price}}</td>
+                                        <td class="text-center balance-column">{{ first_item.item_current_stock }}</td>
+                                        <!-- {% comment %} <td class="text-center">{{ i.action }}</td>
+                                        <td class="text-center">{{ i.done_by_name }}</td> {% endcomment %}
+                                        <td class="text-center pdf-hidden">
+                                            <a style="color: blue; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#myModal2" class=" fa fa-edit  tb hide_table_text_v" 
+                                            hx-get="{% url 'edititemmodaladjust' first_item.id i.id %}"
+                                            hx-trigger="click delay:0s"
+                                            hx-target="#item_transaction_view_or_edit_target"><small> Edit</small></a>                                  
+                                            <a title="Delete Profile" style="color: red; " id="delete" class="fa fa-trash" href="{% url 'transaction_delete'  i.pk %}" ><small>Delete</small> </a>
+
+                                        
+                                        </td> -->
                                         
                                     </tr>
                                    {% endfor %}

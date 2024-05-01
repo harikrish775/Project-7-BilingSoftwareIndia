@@ -407,59 +407,7 @@ def add_item(request):
 
 
 
-def view_item(request):
-  sid = request.session.get('staff_id')
-  staff =  staff_details.objects.get(id=sid)
-  cmp = company.objects.get(id=staff.company.id)
-  allitem = ItemModel.objects.filter(company=cmp)
-  # for i in allitem:
-  #     last_transaction = ItemTransactionHistory.objects.filter(item=i).last()
-  #     if last_transaction:
-  #         i.action = last_transaction.action
-  #         i.done_by_name = last_transaction.done_by_name
-  #     else:
-  #         i.action = None
-  #         i.done_by_name = None
 
-  context={
-    'staff':staff, 
-    'cmp':cmp,
-    'allitem':allitem,
-  }
-  return render(request, 'view_item.html',context)
-
-def view_items(request, pk):
-    sid = request.session.get('staff_id')
-    staff = staff_details.objects.get(id=sid)
-    cmp = company.objects.get(id=staff.company.id)
-    allitem = ItemModel.objects.filter(company=cmp)
-    items = ItemModel.objects.get(id=pk)
-    if pk == 0:
-      first_item = allitem.filter().first()
-    else:
-      first_item = allitem.get(id=pk)
-      transactions = ItemTransactionModel.objects.filter(company = cmp,item=first_item.id).order_by('-trans_created_date')
-      
-
-    # last_transaction = ItemTransactionHistory.objects.filter(item=items).last()
-    # if last_transaction:
-    #     items.action = last_transaction.action
-    #     items.done_by_name = last_transaction.done_by_name
-    # else:
-    #     items.action = None
-    #     items.done_by_name = None
-
-    context = {
-        'staff': staff,
-        'cmp': cmp,
-        'item': items,
-        'first_item':first_item,
-        'allitem':allitem,
-        'transactions':transactions,
-        'item_name': items.item_name,
-    }
-
-    return render(request, 'view_items.html', context)
 
 
 def edit_item(request,pk):
@@ -4590,3 +4538,69 @@ def item_create_new(request):
             return redirect('view_item')
 
     return render(request, 'add_item.html')
+
+
+def view_item(request):
+  sid = request.session.get('staff_id')
+  staff =  staff_details.objects.get(id=sid)
+  cmp = company.objects.get(id=staff.company.id)
+  allitem = ItemModel.objects.filter(company=cmp)
+  # for i in allitem:
+  #     last_transaction = ItemTransactionHistory.objects.filter(item=i).last()
+  #     if last_transaction:
+  #         i.action = last_transaction.action
+  #         i.done_by_name = last_transaction.done_by_name
+  #     else:
+  #         i.action = None
+  #         i.done_by_name = None
+
+  context={
+    'staff':staff, 
+    'cmp':cmp,
+    'allitem':allitem,
+  }
+  return render(request, 'view_item.html',context)
+
+def view_items(request, pk):
+    sid = request.session.get('staff_id')
+    staff = staff_details.objects.get(id=sid)
+    cmp = company.objects.get(id=staff.company.id)
+    allitem = ItemModel.objects.filter(company=cmp)
+    items = ItemModel.objects.get(id=pk)
+    user = cmp.id
+    cnote = CreditnoteItem.objects.filter(company_id=user,item_id=pk)
+    invoice = SalesInvoiceItem.objects.filter(company_id=user,item_id=pk)
+    pbill = PurchaseBillItem.objects.filter(company_id=user,product_id=pk)
+    pdebit = purchasedebit1.objects.filter(company_id=user,product_id=pk) 
+    first_item = allitem.get(id=pk) 
+    transactions = ItemTransactionModel.objects.filter(company = cmp,item=first_item.id).order_by('-trans_created_date')
+    # if pk == 0:
+    #   first_item = allitem.filter().first()
+    # else:
+    #   first_item = allitem.get(id=pk)
+    #   transactions = ItemTransactionModel.objects.filter(company = cmp,item=first_item.id).order_by('-trans_created_date')
+      
+
+    # last_transaction = ItemTransactionHistory.objects.filter(item=items).last()
+    # if last_transaction:
+    #     items.action = last_transaction.action
+    #     items.done_by_name = last_transaction.done_by_name
+    # else:
+    #     items.action = None
+    #     items.done_by_name = None
+
+    context = {
+        'staff': staff,
+        'cmp': cmp,
+        'item': items,
+        'first_item':first_item,
+        'allitem':allitem,
+        'transactions':transactions,
+        'item_name': items.item_name,
+        'cnote':cnote,
+        'invoice':invoice,
+        'pbill':pbill,
+        'pdebit':pdebit,
+    }
+
+    return render(request, 'view_items.html', context)
