@@ -3862,7 +3862,7 @@ def check_itmname(request):
     
     if ItemModel.objects.filter(item_name=item_name,company=cmp).exists():
         return JsonResponse({'exists': True})
-    return JsonResponse({'exists':False})
+    return JsonResponse({'exists':False}) 
 
  
 

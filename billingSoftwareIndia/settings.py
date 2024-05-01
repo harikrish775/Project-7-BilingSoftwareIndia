@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'django_social_share',
+    'my_extras'
 ]
 
 MIDDLEWARE = [
