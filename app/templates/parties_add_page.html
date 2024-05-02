@@ -58,10 +58,10 @@
     <form action="{% url 'party_save2' %}" method="POST" autocomplete="off" id="modalCustomer" > 
         {% csrf_token %}
         
-        <div class="bg-light bs p-4 rounded mb-5 party-div">
+        <div class=" bs p-4 rounded mb-5 " style="background-color: #3d4465;">
             <h2 class="mt-3 text-white">Add Party</h2> <br><br>
-            <div id="main_form_div">
-                <div class="row" style="margin-left: -1vh;">
+            <div id="main_form_div" style="background-color: white;padding: 3%;border-radius: 8xp;">
+                <div class="row" style="margin-left: -2vh;">
                     <div class="col-md-4">
                         <label class="col-form-label" for="partyname" style="color: black;">Party Name</label>
                         <input type="text" class="form-control border-secondary" id="partyname" name="partyname" oninput="nameCheck(this.value)" onchange="nameCheck(this.value)" style="color: black;" autocomplete="on" required>
@@ -228,6 +228,7 @@
 </div>
 
 </div>
+
 
 <script>
     function setButtonValue(value) {

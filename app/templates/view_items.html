@@ -59,6 +59,7 @@
     #detailsTable th{
         color: black;
         font-size: large;
+        
     }
     #detailsTable td{
         color: black;
@@ -93,10 +94,10 @@
         background: linear-gradient(#3d4465 0%, #3d4465 194.7px, white 17px, white 100%);
     }
     .first-column{
-        background: linear-gradient(#3d4465 0%, #3d4465 158.5px, white 17px, white 100%);
+        background: linear-gradient(#3d4465 0%, #3d4465 222px, white 17px, white 100%);
     }
     .abc{
-        margin-left: 10vw;
+        margin-left: 5vw;
     }
     #pdftable{
         margin-left: -40px;
@@ -106,10 +107,13 @@
     }
 @media(max-width:768px){
         .item-div{
-        background: linear-gradient(#3d4465 0%, #3d4465 165px, white 17px, white 100%);
+        background: linear-gradient(#3d4465 0%, #3d4465 195px, white 17px, white 100%);
     }
     .tran-div{
         background: linear-gradient(#3d4465 0%, #3d4465 290px, white 17px, white 100%);
+    }
+    .first-column{
+        background: linear-gradient(#3d4465 0%, #3d4465 216px, white 17px, white 100%);
     }
     .button-hover{
         margin-top: 10px;
@@ -130,17 +134,17 @@
 
 
 
-
-<div class="content-body" >
+{% if allitem %}
+<div class="content-body" > 
     <!-- row -->
     <!-- 1st column -->
     <div class="row">
-        <div class="col-md-3 ml-md-5 first-column" style="border-radius: 8px;">
-            <div class="row">
+        <div class="col-md-3 ml-5 first-column mb-3 " style="border-radius: 8px;">
+            <div class="row ">
                 <!-- ------------party table ------------------->
     
                 <div class="col-12 table-responsive table-div" style="padding: 30px;border-radius: 8px;">
-                    
+                    <h3 class="text-white mt-3">ITEMS </h3> 
                     <div class="row" style="display: flex;">
                         
                             <!-- <h3 class="text-white col-8 mt-3">ITEMS </h3>  -->
@@ -175,54 +179,42 @@
                         <table class="table " id="itemTable" >
                             
                             <thead>
-                                <th class="col-4" style="background-color: #3d4465;color: white;">ITEM</th>
-                                <th class="col-4" style="background-color: #3d4465;color: white;">QUANTITY </th>
-                                <th class="col-4" style="background-color: #3d4465;color: white;">ACTION</th>
+                                <th class="col-6 fs-6" style="background-color: #3d4465;color: white;">&nbsp;ITEM</th>
+                                <th class="col-5 fs-6" style="background-color: #3d4465;color: white;">QUANTITY </th>
+                                <!-- <th class="col-4" style="background-color: #3d4465;color: white;">ACTION</th> -->
                                 
                             </thead>
                             {% for i in allitem %}
                             <tr>
-                                <td class="col-4">
+                                <td class="col-6">
                                     <div class="row">
-                                        <div class="col-md-2">
-                                            <a id="filterByName" title="Show" style="color: black;cursor: pointer;" href="{% url 'view_items' i.pk %}" >{{ i.item_name|capfirst }}</a> 
+                                        <div class="col-md">
+                                            &nbsp;<a id="filterByName" title="Show" style="color: black;cursor: pointer;" href="{% url 'view_items' i.pk %}" >{{ i.item_name|capfirst }}</a> 
                                         </div>
-                                        <div class="col-md-8">
-                                            <a title="Edit Profile" style="display: inline-block; margin-left: 20px;" id="editt" class="fa fa-edit" href="{% url 'edit_item' i.pk %}" ><small>Edit </small> </a>
-                                        </div>
+                                        
                                     </div>
                                 </td>
     
-                                <td class="col-4">
+                                <td class="col-5">
                                     <div class="row">
                                         <div class="col-md-2">
                                             <a  style="color: black;" > {{ i.item_current_stock }}</a> 
                                         </div>
-                        
                                     </div>
                                 </td>
                                
-                                <td class="col-4">
-                                    <div class="row">
-                                        <div class="col"> 
-                                            <a style="color: black;" onmouseover="this.style.color='gray'" onmouseout="this.style.color='black'" href="{% url 'itemhistory' i.pk %}" title="{{ i.item_name }}'s History"><i class="fa-solid fa-clock-rotate-left"></i> {{ i.item_name }}'s History</a>
+                                <td class="col">
+                                    <div class="dropdown show" >
+                                        <a title="Delete {{ i.item_name }}"  class="dropdown partyy" href="#" role="button" id="dropdownMenuLink"  data-toggle="dropdown" style="color: black;" onmouseover="this.style.color='red'" onmouseout="this.style.color='black'"  aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                                        </a>
+                                      
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" >
+                                            <a title="Edit Profile"  id="editt" class="dropdown-item" href="{% url 'edit_item' i.pk %}" >Edit <span class="fa fa-edit pe-2 " style="color: #E4A11B;"></span> </a>
+                                            <a class="dropdown-item" href="{% url 'itemhistory' i.pk %}" title="{{ i.item_name }}'s History">History <span class="fa fa-history pe-2 " style="color: rgb(12, 79, 234);"></span></a>
+                                            <a  class="dropdown-item" href="{% url 'item_delete' i.pk %}" >Delete  <i style="color: red;" class="fa-solid fa-trash"  ></i></a>
                                         </div>
-    
-                                        <div class="dropdown show col" >
-                                            <a title="Delete {{ i.item_name }}"  class="dropdown partyy" href="#" role="button" id="dropdownMenuLink"  data-toggle="dropdown" style="color: black;" onmouseover="this.style.color='red'" onmouseout="this.style.color='black'"  aria-haspopup="true" aria-expanded="false">
-                                                <!-- <i class="fa-solid fa-ellipsis-vertical"></i> -->
-                                                <i style="color: red;" class="fa fa-trash"></i> Delete
-                                            </a>
-                                          
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="padding: 0;background-color: rgba(255, 0, 0, 0.317);">
-                                              
-                                              <center><a onmouseover="this.style.color='red'" onmouseout="this.style.color='black'" style="padding: 0;" class="dropdown-item" href="{% url 'item_delete' i.pk %}" >Delete {{i.item_name}} ? <i style="color: red;" class="fa-solid fa-trash"  ></i></a></center>
-                                              
-                                              
-                                            </div>
-                                          </div>
-                                    </div>
-    
+                                      </div>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -242,14 +234,14 @@
                     <!-- --------------------name--------------------- -->
                 
                     <div class="col-11 item-div" style="background-color: white ;padding: 20px;border-radius: 8px; margin-left: 2vw;" >
-                        <div class="row mx-md-4">
-                            <div class="col-md-8">
-                                <p class="tb fw-bolder fs-5 text-white ml-md-3" style="color: black;">{{ first_item.item_name|upper }} <span class="fa fa-share ps-1 tb"></span></p>
+                        <div class="row mx-md-3">
+                            <div class="col-md-5 mt-md-2">
+                                <p class="tb fw-bolder fs-4 text-white " style="color: black;">{{ first_item.item_name|upper }} <span class="fa fa-share ps-1 tb"></span></p>
                             <h3 id="namee" style="text-transform: uppercase;font-size: 25px;" ></h3></div>
                          
                               
         
-                             <div style="text-align: right;" class="col-md mr-md-3">
+                             <div style="text-align: right;" class="col-md mr-md-1 mt-md-2">
                                 <button style="height: 37px;" class=" btn button-hover mb-2" data-bs-toggle="modal" data-bs-target="#myModal1" data-bs-whatever="@getbootstrap"
                                 hx-get="{% url 'itemmodaladjust' first_item.id %}"
                                 hx-trigger="click delay:0s"
@@ -260,17 +252,17 @@
                             </div> 
                             </div><br>
                              
-                    <div class="row mx-md-4" id="thirdTable" style="color: black;">
-                        <div class="col-md ml-md-3">
+                    <div class="row mx-md-3" id="thirdTable" style="color: black;">
+                        <div class="col-md ">
                             <div class="">
                                 <p class="tb fw-bolder fs-5">SALE PRICE  <span class="ps-2 tg">: ₹{{ first_item.item_sale_price }}</span></p>
                                 <p class="tb fw-bolder fs-5">STOCK QUANTITY  <span class="ps-2 tg">: {{ first_item.item_current_stock }}</span></p>
                             </div>
                         </div>
-                        <div class="col-md ml-5">
+                        <div class="col-md">
                             <div class="abc">
-                                <p class="tb ml-5 fw-bolder fs-5">PURCHASE PRICE  <span class="ps-2 tg">: ₹{{ first_item.item_purchase_price }}</span></p>
-                                <p class="tb ml-5 fw-bolder fs-5">STOCK VALUE  <span class="ps-2 tg">: ₹{{ first_item.item_current_stock|mul:first_item.item_purchase_price }}</span></p>
+                                <p class="tb fw-bolder fs-5">PURCHASE PRICE  <span class="ps-2 tg">: ₹{{ first_item.item_purchase_price }}</span></p>
+                                <p class="tb fw-bolder fs-5">STOCK VALUE  <span class="ps-2 tg">: ₹{{ first_item.item_current_stock|mul:first_item.item_purchase_price }}</span></p>
                             </div>
                         </div>
                         
@@ -287,12 +279,12 @@
                 
                     <div class="row">
                         <div class="col-11 tran-div mb-3" style="background-color: white ; padding: 40px;border-radius: 8px; margin-left: 2vw;min-height: 50vh;">
-                            <div class="row mx-md-4">
+                            <div class="row ml-md-1">
                                 <h3 class="text-white">Transactions</h3>
                                 
-                                <input class="form-control col-md-3 ml-md-2" type="text"  autocomplete="off" id="myInput1"   placeholder="search"/>
-                                <div class="col-md-5"></div>
-                                <div class="col-md" style="display: flex;direction: rtl;">
+                                <input class="form-control col-md-3 ml-md-3" type="text"  autocomplete="off" id="myInput1"   placeholder="search"/>
+                                <div class="col-md-3"></div>
+                                <div class="col-md mr-md-4" style="display: flex;direction: rtl;">
                                     <div >
                                         <button class="btn button-hover" style="direction: ltr;" onclick="ExportAsPDF()">PDF  <i class="fa-solid fa-file-pdf"></i></button>
                                         <button class="btn button-hover" style="direction: ltr;" onclick="printTable('{{ item_name }}')">print <i class="fa-solid fa-print"></i></button>
@@ -307,12 +299,12 @@
                                 
                                     <table class="table" id="detailsTable" >
                                         <thead>
-                                            <th style="color: white;background-color: #3d4465;" class="text-center ">TYPE </th>
-                                            <th style="color: white;background-color: #3d4465;" class="text-center ">INVOICE </th>
+                                            <th style="color: white;background-color: #3d4465;" class="text-center">&nbsp;&nbsp;&nbsp; TYPE </th>
+                                            <th style="color: white;background-color: #3d4465;width: 15%;" class="text-center ">INVOICE </th>
                                             <th style="color: white;background-color: #3d4465; width: 20%;" class="text-center ">NAME</th>
                                             <th style="color: white;background-color: #3d4465;" class="text-center ">DATE </th>
                                             <th style="color: white;background-color: #3d4465;" class="text-center ">QUANTITY</th>
-                                            <th style="color: white;background-color: #3d4465;" class="text-center ">PRICE</th>
+                                            <th style="color: white;background-color: #3d4465;" class="text-center "> PRICE</th>
                                             <th style="color: white;background-color: #3d4465;" class="text-center  balance-column ">Balance</th>
                                             {% comment %} <th style="color: white;background-color: #3d4465;" class="text-center ">ACTION</span></th>
                                             <th style="color: white;background-color: #3d4465;" class="text-center ">BY</th> {% endcomment %}
@@ -321,7 +313,7 @@
                                         </thead>
                                         <tbody style="min-height: 80vh;">
                                             <tr class="item-row" {% if first_item.item_stock_in_hand == 0 %} hidden{% endif %} id="transaction_{{ first_item.pk }}">
-                                                <td class="text-center">Opening Stock</td>
+                                                <td class="text-center">&nbsp; Opening Stock</td>
                                                 <td class="text-center" ></td>
                                                 <td class="text-center"></td>
                                                 <td class="text-center">{{ first_item.item_date|date:"d-m-Y" }}</td>
@@ -500,6 +492,49 @@
         </div>
     </div>
 </div>
+
+
+
+{% else %}
+
+
+<div class="content-body" style="background-color: white;">
+    <!-- row -->
+    <div class="container-fluid">
+    <div class="p-5 text-center" style="display: flex;justify-content: center;">
+        <div class="card " style="background-color: rgb(130, 144, 199); width:50rem;box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.249);">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <img height="450vw" src="{{'static/images/billingsystemimg.jpg'}}" class="card-img" alt="no img">
+                    <!-- <div class="card-img-overlay">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        <p class="card-text"><small>Last updated 3 mins ago</small></p>
+                    </div> -->
+                </div>
+                <div class="col-sm-12 col-md-6 ps-4 pe-4">
+                    <div class="p-1 rounded" style="border: 1px solid rgba(0, 0, 0, 0);border-bottom: none;">
+                        <p style="margin-bottom: 4rem;"></p>
+                        <img width="50vw" src="{% static 'img/logo/logo3.png' %}" alt="no img">
+                        <p></p>
+                        <h1 style="font-weight:900;color:rgba(0, 0, 0, 0.644);font-size: 1.5rem;">MultiUser Billing Software</h1>
+                        <!-- <h5 class="card-title">Card title</h5> -->
+                        <p style="margin-bottom: 1.5rem;"></p>
+                        <p class="card-text" style="color: black;">Welcome to MultiUser Billing Software</p>
+                        <p style="color: rgb(0, 89, 10);font-weight: light;" class="card-text">Please create your first Item</p>
+                        <p class="mt-4"></p>
+                        <a class="btn btn-lg " style="background-color: #3d4465; color: white;" href="{% url 'add_item' %}">Create Item</a>
+                        <p style="margin-bottom: 4rem;"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+{% endif %}
 
 <script>
 

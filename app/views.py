@@ -462,79 +462,7 @@ def edit_item(request,pk):
 #     return redirect('view_item')
 #   return redirect('edit_item')
 
-def update_item(request, pk):
-    if request.method == 'POST':
-        sid = request.session.get('staff_id')
-        staff = staff_details.objects.get(id=sid)
-        cmp = company.objects.get(id=staff.company.id)
 
-        item_data = ItemModel.objects.get(id=pk)
-        user = cmp.user
-        company_user_data = cmp
-
-        item_name = request.POST.get('item_name')
-        item_hsn = request.POST.get('item_hsn')
-        item_unit = request.POST.get('item_unit')
-        item_type = request.POST.get('type')
-        item_taxable = request.POST.get('item_taxable')
-        item_gst = request.POST.get('item_gst')
-        item_igst = request.POST.get('item_igst')
-        
-        if item_taxable == 'Non Taxable':
-            item_gst = 'GST0[0%]'
-            item_igst = 'IGST0[0%]'
-
-        item_sale_price = request.POST.get('saleprice')
-        item_purchase_price = request.POST.get('purprice')
-        item_stock_in_hand = request.POST.get('item_opening_stock')
-
-        if item_stock_in_hand == '':
-            item_stock_in_hand = 0
-
-        item_current_stock = item_data.item_current_stock
-
-        if int(item_stock_in_hand) > item_data.item_stock_in_hand:
-            item_stock = item_data.item_current_stock + (int(item_stock_in_hand) - item_data.item_stock_in_hand)
-        elif int(item_stock_in_hand) < item_data.item_stock_in_hand:
-            item_stock = item_data.item_current_stock - (item_data.item_stock_in_hand - int(item_stock_in_hand))
-        else:
-            item_stock = item_current_stock
-
-        item_at_price = request.POST.get('item_at_price')
-
-        if item_at_price == '':
-            item_at_price = 0
-
-        item_date = request.POST.get('itmdate')
-
-        item_data.user = user
-        item_data.company = company_user_data
-        item_data.item_name = item_name
-        item_data.item_hsn = item_hsn
-        item_data.item_unit = item_unit
-        item_data.item_type = item_type
-        item_data.item_taxable = item_taxable
-        item_data.item_gst = item_gst
-        item_data.item_igst = item_igst
-        item_data.item_sale_price = item_sale_price
-        item_data.item_purchase_price = item_purchase_price
-        item_data.item_stock_in_hand = item_stock_in_hand
-        item_data.item_current_stock = int(item_stock)
-        item_data.item_at_price = item_at_price
-        item_data.item_date = item_date
-
-        item_data.save()
-        print('\nupdated')
-
-        tr_history = ItemTransactionHistory(company=cmp,
-                                        staff=staff,      
-                                        item=item_data,
-                                        action="UPDATED",
-                                        done_by_name=staff.first_name,
-                                        )
-        tr_history.save()
-
-    return redirect('view_item')
 
 
 
@@ -4442,12 +4370,12 @@ def create_item_valid_ajax(request):
         item_hsn = request.POST.get('item_hsn')
 
         if ItemModel.objects.filter(item_name=item_name, company=cmp).exists():
-          return JsonResponse({'error': 'Item Name already exists. Please choose a different Name.'})
+          return JsonResponse({'success': False,'error': 'Item Name already exists. Please choose a different Name.'})
         elif ItemModel.objects.filter(item_hsn=item_hsn, company=cmp).exists():
-          return JsonResponse({'error': 'Item HSN already exists. Please choose a different HSN.'})
+          return JsonResponse({'success': False,'error': 'Item HSN/SAC already exists. Please choose a different HSN/SAC.'})
         if item_hsn:
           if len(item_hsn) < 6:
-              return JsonResponse({'error': 'Item HSN must be 6 digits or more.'})
+              return JsonResponse({'success': False,'error': 'Item HSN/SAC must be 6 digits or more.'})
 
         return JsonResponse({'success': True})
 
@@ -4506,6 +4434,7 @@ def item_create_new(request):
         if item_at_price == '' or None:
             item_at_price = 0
         item_date = request.POST.get('itmdate')
+        item_minstock = request.POST.get('minstock')
 
         item_data = ItemModel(user=staff.company.user,
                               company=cmp,
@@ -4520,9 +4449,11 @@ def item_create_new(request):
                               item_sale_price=item_sale_price,
                               item_purchase_price=item_purchase_price,
                               item_stock_in_hand=item_opening_stock,
+                              item_opening_stock=item_opening_stock,
                               item_current_stock=item_current_stock,
                               item_at_price=item_at_price,
-                              item_date=item_date)
+                              item_date=item_date,
+                              item_min_stock_maintain=item_minstock)
         item_data.save()
 
         tr_history = ItemTransactionHistory(company=cmp,
@@ -4535,9 +4466,95 @@ def item_create_new(request):
         if request.POST.get('clickedButtonValue') == 'save_and_next':
             return redirect('add_item')
         else:
-            return redirect('view_item')
+            return redirect('view_items',pk=item_data.id)
 
     return render(request, 'add_item.html')
+
+
+def update_item(request, pk):
+    if request.method == 'POST':
+        sid = request.session.get('staff_id')
+        staff = staff_details.objects.get(id=sid)
+        cmp = company.objects.get(id=staff.company.id)
+
+        item_data = ItemModel.objects.get(id=pk)
+        user = cmp.user
+        company_user_data = cmp
+
+        item_name = request.POST.get('item_name')
+        item_hsn = request.POST.get('item_hsn')
+        item_unit = request.POST.get('item_unit')
+        item_type = request.POST.get('type')
+        item_taxable = request.POST.get('item_taxable')
+        item_gst = request.POST.get('item_gst')
+        item_igst = request.POST.get('item_igst')
+
+        
+        if item_taxable == 'Non Taxable':
+            item_gst = ''
+            item_igst = ''
+
+        item_sale_price = request.POST.get('saleprice')
+        item_purchase_price = request.POST.get('purprice')
+        item_stock_in_hand = request.POST.get('item_opening_stock')
+
+        if item_stock_in_hand == '':
+            item_stock_in_hand = 0
+
+        item_current_stock = item_data.item_current_stock
+
+        if int(item_stock_in_hand) > item_data.item_stock_in_hand:
+            item_stock = item_data.item_current_stock + (int(item_stock_in_hand) - item_data.item_stock_in_hand)
+        elif int(item_stock_in_hand) < item_data.item_stock_in_hand:
+            item_stock = item_data.item_current_stock - (item_data.item_stock_in_hand - int(item_stock_in_hand))
+        else:
+            item_stock = item_current_stock
+
+        item_at_price = request.POST.get('item_at_price')
+
+        if item_at_price == '':
+            item_at_price = 0
+
+        item_date = request.POST.get('itmdate')
+
+        if ItemModel.objects.filter(item_name=item_name, company=cmp).exclude(id=pk).exists():
+          return JsonResponse({'error': 'Item Name already exists. Please choose a different Name.'})
+        elif ItemModel.objects.filter(item_hsn=item_hsn, company=cmp).exclude(id=pk).exists():
+          return JsonResponse({'error': 'Item HSN already exists. Please choose a different HSN.'})
+        if item_hsn:
+          if len(item_hsn) < 6:
+              return JsonResponse({'error': 'Item HSN must be 6 digits or more.'})
+          else:
+            item_data.user = user
+            item_data.company = company_user_data
+            item_data.item_name = item_name
+            item_data.item_hsn = item_hsn
+            item_data.item_unit = item_unit
+            item_data.item_type = item_type
+            item_data.item_taxable = item_taxable
+            item_data.item_gst = item_gst
+            item_data.item_igst = item_igst
+            item_data.item_sale_price = item_sale_price
+            item_data.item_purchase_price = item_purchase_price
+            item_data.item_stock_in_hand = item_stock_in_hand
+            item_data.item_current_stock = int(item_stock)
+            item_data.item_at_price = item_at_price
+            item_data.item_date = item_date
+            item_data.item_opening_stock = item_stock_in_hand
+
+            item_data.save()
+            print('\nupdated')
+
+            tr_history = ItemTransactionHistory(company=cmp,
+                                            staff=staff,      
+                                            item=item_data,
+                                            action="UPDATED",
+                                            done_by_name=staff.first_name,
+                                            )
+            tr_history.save()
+            return redirect('view_items',pk=pk)
+
+    return redirect('view_item')
 
 
 def view_item(request):
@@ -4545,21 +4562,50 @@ def view_item(request):
   staff =  staff_details.objects.get(id=sid)
   cmp = company.objects.get(id=staff.company.id)
   allitem = ItemModel.objects.filter(company=cmp)
-  # for i in allitem:
-  #     last_transaction = ItemTransactionHistory.objects.filter(item=i).last()
-  #     if last_transaction:
-  #         i.action = last_transaction.action
-  #         i.done_by_name = last_transaction.done_by_name
-  #     else:
-  #         i.action = None
-  #         i.done_by_name = None
-
-  context={
-    'staff':staff, 
-    'cmp':cmp,
-    'allitem':allitem,
-  }
-  return render(request, 'view_item.html',context)
+  user = cmp.id
+  count = ItemModel.objects.filter(company_id=user).count()
+  if count > 0:
+    items = ItemModel.objects.filter(company_id=user).first()
+    pk = items.id
+    cnote = CreditnoteItem.objects.filter(company_id=user,item_id=pk)
+    invoice = SalesInvoiceItem.objects.filter(company_id=user,item_id=pk)
+    pbill = PurchaseBillItem.objects.filter(company_id=user,product_id=pk)
+    pdebit = purchasedebit1.objects.filter(company_id=user,product_id=pk) 
+    first_item = allitem.get(id=pk) 
+    transactions = ItemTransactionModel.objects.filter(company = cmp,item=first_item.id).order_by('-trans_created_date')
+    # if pk == 0:
+    #   first_item = allitem.filter().first()
+    # else:
+    #   first_item = allitem.get(id=pk)
+    #   transactions = ItemTransactionModel.objects.filter(company = cmp,item=first_item.id).order_by('-trans_created_date')
+      
+    # last_transaction = ItemTransactionHistory.objects.filter(item=items).last()
+    # if last_transaction:
+    #     items.action = last_transaction.action
+    #     items.done_by_name = last_transaction.done_by_name
+    # else:
+    #     items.action = None
+    #     items.done_by_name = None
+    context = {
+        'staff': staff,
+        'cmp': cmp,
+        'item': items,
+        'first_item':first_item,
+        'allitem':allitem,
+        'transactions':transactions,
+        'item_name': items.item_name,
+        'cnote':cnote,
+        'invoice':invoice,
+        'pbill':pbill,
+        'pdebit':pdebit,
+    }
+    return render(request, 'view_items.html',context)
+  else:
+    context = {
+        'staff': staff,
+        'cmp': cmp,
+    }
+    return render(request, 'view_items.html',context)
 
 def view_items(request, pk):
     sid = request.session.get('staff_id')
@@ -4604,3 +4650,4 @@ def view_items(request, pk):
     }
 
     return render(request, 'view_items.html', context)
+
