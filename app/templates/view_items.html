@@ -107,22 +107,23 @@
     }
 @media(max-width:768px){
         .item-div{
-        background: linear-gradient(#3d4465 0%, #3d4465 195px, white 17px, white 100%);
+        background: linear-gradient(#3d4465 0%, #3d4465 145px, white 17px, white 100%);
     }
     .tran-div{
-        background: linear-gradient(#3d4465 0%, #3d4465 290px, white 17px, white 100%);
+        background: linear-gradient(#3d4465 0%, #3d4465 242px, white 17px, white 100%);
     }
     .first-column{
-        background: linear-gradient(#3d4465 0%, #3d4465 216px, white 17px, white 100%);
+        background: linear-gradient(#3d4465 0%, #3d4465 221.5px, white 17px, white 100%);
+        
     }
-    .button-hover{
+    .button-margin{
         margin-top: 10px;
         /* margin-left: -10px; */
     }
     
     }
 
-.button-hover{
+    .button-hover{
         background-color: white;
         color: #3d4465;
     }
@@ -137,9 +138,10 @@
 {% if allitem %}
 <div class="content-body" > 
     <!-- row -->
-    <!-- 1st column -->
-    <div class="row">
-        <div class="col-md-3 ml-5 first-column mb-3 " style="border-radius: 8px;">
+    
+    <div class="row mt-3">
+        <!-- 1st column -->
+        <div class="col-md-3 ml-md-5 first-column mb-3 " style="border-radius: 8px;">
             <div class="row ">
                 <!-- ------------party table ------------------->
     
@@ -227,13 +229,13 @@
         </div>
 
         <!-- 2nd column -->
-        <div class="col-md">
+        <div class="col-md mr-3">
             <div class="container-fluid">
                 <div class="row" >
                         
                     <!-- --------------------name--------------------- -->
                 
-                    <div class="col-11 item-div" style="background-color: white ;padding: 20px;border-radius: 8px; margin-left: 2vw;" >
+                    <div class="col-12 item-div" style="background-color: white ;padding: 20px;border-radius: 8px; margin-left: 0.5vw;" >
                         <div class="row mx-md-3">
                             <div class="col-md-5 mt-md-2">
                                 <p class="tb fw-bolder fs-4 text-white " style="color: black;">{{ first_item.item_name|upper }} <span class="fa fa-share ps-1 tb"></span></p>
@@ -248,21 +250,21 @@
                                 hx-target="#item_get_details_for_modal_target"
                                 ><span class="fa fa-sliders-h "></span> ADJUSTMENT ITEM</button>  
                                 
-                                <a class="btn button-hover mb-md-2" href="{% url 'view_item' %}"><i class="fa fa-arrow-left"></i> Back</a>
+                                <!-- <a class="btn button-hover mb-md-2" href="{% url 'view_item' %}"><i class="fa fa-arrow-left"></i> Back</a> -->
                             </div> 
                             </div><br>
                              
                     <div class="row mx-md-3" id="thirdTable" style="color: black;">
                         <div class="col-md ">
                             <div class="">
-                                <p class="tb fw-bolder fs-5">SALE PRICE  <span class="ps-2 tg">: ₹{{ first_item.item_sale_price }}</span></p>
-                                <p class="tb fw-bolder fs-5">STOCK QUANTITY  <span class="ps-2 tg">: {{ first_item.item_current_stock }}</span></p>
+                                <label class="tb">Sale Price  <span class="ps-2 tg">: ₹{{ first_item.item_sale_price }}</span></label> <br>
+                                <label class="tb">Stock Quantity  <span class="ps-2 tg">: {{ first_item.item_current_stock }}</span></label>
                             </div>
                         </div>
                         <div class="col-md">
                             <div class="abc">
-                                <p class="tb fw-bolder fs-5">PURCHASE PRICE  <span class="ps-2 tg">: ₹{{ first_item.item_purchase_price }}</span></p>
-                                <p class="tb fw-bolder fs-5">STOCK VALUE  <span class="ps-2 tg">: ₹{{ first_item.item_current_stock|mul:first_item.item_purchase_price }}</span></p>
+                                <label class="tb">Purchase Price  <span class="ps-2 tg">: ₹{{ first_item.item_purchase_price }}</span></label> <br>
+                                <label class="tb">Stock Value  <span class="ps-2 tg">: ₹{{ first_item.item_current_stock|mul:first_item.item_purchase_price }}</span></label>
                             </div>
                         </div>
                         
@@ -278,7 +280,7 @@
                     <!-- -------------------transaction----------------------- -->
                 
                     <div class="row">
-                        <div class="col-11 tran-div mb-3" style="background-color: white ; padding: 40px;border-radius: 8px; margin-left: 2vw;min-height: 50vh;">
+                        <div class="col-12 tran-div mb-3" style="background-color: white ; padding: 40px;border-radius: 8px; margin-left: 0.5vw;min-height: 50vh;">
                             <div class="row ml-md-1">
                                 <h3 class="text-white">Transactions</h3>
                                 
@@ -286,9 +288,9 @@
                                 <div class="col-md-3"></div>
                                 <div class="col-md mr-md-4" style="display: flex;direction: rtl;">
                                     <div >
-                                        <button class="btn button-hover" style="direction: ltr;" onclick="ExportAsPDF()">PDF  <i class="fa-solid fa-file-pdf"></i></button>
-                                        <button class="btn button-hover" style="direction: ltr;" onclick="printTable('{{ item_name }}')">print <i class="fa-solid fa-print"></i></button>
-                                        <button class="btn button-hover" style="direction: ltr;" onclick="exportAsExcel()">excel <i class="fa-solid fa-file-excel"></i></button>
+                                        <button class="btn button-hover button-margin" style="direction: ltr;" onclick="ExportAsPDF()">PDF  <i class="fa-solid fa-file-pdf"></i></button>
+                                        <button class="btn button-hover button-margin" style="direction: ltr;" onclick="printTable('{{ item_name }}')">print <i class="fa-solid fa-print"></i></button>
+                                        <button class="btn button-hover button-margin" style="direction: ltr;" onclick="exportAsExcel()">excel <i class="fa-solid fa-file-excel"></i></button>
                                     </div>
                                 </div>
                             </div><br>
